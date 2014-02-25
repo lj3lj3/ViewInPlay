@@ -41,6 +41,7 @@ public final class R {
         public static final int key_directly_show_in_play=0x7f07000a;
         public static final int key_show_in_app_info=0x7f070009;
         public static final int key_show_in_recent_panel=0x7f070008;
+        public static final int no_play_on_the_phone=0x7f070014;
         public static final int notif_app_info=0x7f070006;
         public static final int pref_summary_directly_view_in_play_off=0x7f070013;
         public static final int pref_summary_directly_view_in_play_on=0x7f070012;

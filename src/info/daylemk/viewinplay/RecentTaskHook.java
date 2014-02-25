@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -260,7 +261,7 @@ public class RecentTaskHook {
      * @param packageName
      */
     static void viewInPlay(Context ctx, String packageName) {
-        Log.d(TAG, "view in play : " + packageName);
+        XposedBridge.log(TAG + TAG_CLASS + "view in play : " + packageName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -282,6 +283,9 @@ public class RecentTaskHook {
                     break;
                 }
             }
+            XposedBridge.log(TAG + TAG_CLASS + "user wants to show [" + packageName + "] in the play, but no play here, pity");
+            // if didn't find the Google Play Store, show the toast
+            Toast.makeText(ctx, R.string.no_play_on_the_phone, Toast.LENGTH_LONG).show();
         }
         ctx.startActivity(intent);
     }
