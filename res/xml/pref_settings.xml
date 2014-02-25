@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <CheckBoxPreference
-        android:key="@string/key_show_in_recent_panel"
-        android:title="@string/pref_title_show_in_recent_panel"
-        android:summaryOn="@string/pref_summary_show_in_recent_panel_on"
-        android:summaryOff="@string/pref_summary_show_in_recent_panel_off"
-		android:defaultValue="false"
-        /> 
 
     <CheckBoxPreference
-        android:key="@string/key_show_in_app_info"
-        android:title="@string/pref_title_show_in_app_info" 
-        android:summaryOn="@string/pref_summary_show_in_app_info_on"
-        android:summaryOff="@string/pref_summary_show_in_app_info_off"
         android:defaultValue="false"
-        />
-    
+        android:key="@string/key_show_in_recent_panel"
+        android:summaryOff="@string/pref_summary_show_in_recent_panel_off"
+        android:summaryOn="@string/pref_summary_show_in_recent_panel_on"
+        android:title="@string/pref_title_show_in_recent_panel" />
     <CheckBoxPreference
-        android:key="@string/key_directly_show_in_play"
-        android:title="@string/pref_title_directly_view_in_play" 
-        android:summaryOn="@string/pref_summary_directly_view_in_play_on"
-        android:summaryOff="@string/pref_summary_directly_view_in_play_off"
         android:defaultValue="false"
-        />
+        android:key="@string/key_show_in_app_info"
+        android:summaryOff="@string/pref_summary_show_in_app_info_off"
+        android:summaryOn="@string/pref_summary_show_in_app_info_on"
+        android:title="@string/pref_title_show_in_app_info" />
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_directly_show_in_play"
+        android:summaryOff="@string/pref_summary_directly_view_in_play_off"
+        android:summaryOn="@string/pref_summary_directly_view_in_play_on"
+        android:title="@string/pref_title_directly_view_in_play" />
+
+    <PreferenceCategory android:title="@string/pref_title_note" >
+        <Preference
+            android:selectable="false"
+            android:summary="@string/pref_summary_note"
+            />
+    </PreferenceCategory>
 
 </PreferenceScreen>

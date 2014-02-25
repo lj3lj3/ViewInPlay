@@ -24,6 +24,8 @@
     <string name="pref_title_directly_view_in_play">Directly view in google play</string>
     <string name="pref_summary_directly_view_in_play_on">directly view in google play, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
+    <string name="pref_title_note">Note</string>
+    <string name="pref_summary_note">After change, Please reboot your phone</string>
     
     <string name="no_play_on_the_phone">oh~ no Google Play Store??? if you sure you have it, please contact me :)</string>
 </resources>
