@@ -15,6 +15,7 @@
     <string name="key_show_in_recent_panel">show_in_recent_panel</string>
     <string name="key_show_in_app_info">show_in_app_info</string>
     <string name="key_directly_show_in_play">directly_show_in_play</string>
+    <string name="key_pref_layout">key_pref_layout</string>
     
     <string name="pref_title_show_in_recent_panel">Show in recent panel</string>
     <string name="pref_summary_show_in_recent_panel_on">"the 'view in play' menu will show in the long press pupop menu in the recent task panel"</string>

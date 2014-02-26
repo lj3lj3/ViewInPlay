@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/key_pref_layout" >
 
     <CheckBoxPreference
         android:defaultValue="false"
@@ -29,6 +30,13 @@
             android:icon="@drawable/xda_icon"
             android:title="@string/pref_title_xda"
             android:summary="@string/pref_summary_xda"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_title_about">
+        <Preference
+            android:selectable="false"
+            android:title="@string/version"
+            android:summary="@string/version_string"
             />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_title_about">
