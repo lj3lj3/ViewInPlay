@@ -25,6 +25,18 @@
             android:selectable="false"
             android:summary="@string/pref_summary_note"
             />
+        <Preference
+            android:icon="@drawable/xda_icon"
+            android:title="@string/pref_title_xda"
+            android:summary="@string/pref_summary_xda"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_title_about">
+        <Preference
+            android:selectable="false"
+            android:title="@string/version"
+            android:summary="@string/version_string"
+            />
     </PreferenceCategory>
 
 </PreferenceScreen>

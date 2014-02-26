@@ -1,9 +1,14 @@
 
 package info.daylemk.viewinplay;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
+import android.util.Log;
 
 public class SettingsFragment extends PreferenceFragment {
     private static final String TAG = "DayL";
@@ -31,5 +36,17 @@ public class SettingsFragment extends PreferenceFragment {
         this.getPreferenceManager()
                 .setSharedPreferencesMode(PreferenceActivity.MODE_WORLD_READABLE);
         addPreferencesFromResource(R.xml.pref_settings);
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        if(preference.getTitleRes() == R.string.pref_title_xda){
+            Log.d(TAG, "view the xda thread");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("http://forum.xda-developers.com/showthread.php?p=50636629"));
+            this.getActivity().startActivity(intent);
+        }
+        
+        return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 }

@@ -14,7 +14,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit,
         IXposedHookInitPackageResources {
-    private static final String TAG = "XposedInit";
+    private static final String TAG = "DayL";
 
     public static XModuleResources sModRes;
     static String MODULE_PATH = null;
@@ -49,19 +49,23 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     public void handleLoadPackage(final LoadPackageParam lpparam)
             throws Throwable {
         loadPref(lpparam);
-        
+
         RecentTaskHook.handleLoadPackage(lpparam, mPref);
         AppInfoHook.handleLoadPackage(lpparam, mPref);
     }
 
     private void loadPref(final LoadPackageParam lpparam) {
-        if (!lpparam.packageName.equals("com.android.systemui"))
+        if (!lpparam.packageName.equals("com.android.systemui") 
+                // FIXED the directly view in play not effect in the app info screen
+                && !lpparam.packageName.equals("com.android.settings"))
             return;
 
+        XposedBridge.log(TAG + "lpparam.packageName:" + lpparam.packageName);
+        
         mPref.reload();
         directlyShowInPlay = mPref.getBoolean(KEY_DIRECTLY_SHOW_IN_PLAY,
                 Common.DEFAULT_DIRECTLY_SHOW_IN_PLAY);
-        
+
         XposedBridge.log(TAG + "the directly is " + directlyShowInPlay);
     }
 

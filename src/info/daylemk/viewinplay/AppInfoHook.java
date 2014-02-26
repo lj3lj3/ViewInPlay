@@ -1,9 +1,9 @@
 
 package info.daylemk.viewinplay;
 
+import android.app.Fragment;
 import android.content.pm.ApplicationInfo;
 import android.content.res.XModuleResources;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -34,6 +34,10 @@ public class AppInfoHook {
         if (!lpp.packageName.equals("com.android.settings"))
             return;
         XposedBridge.log(TAG + TAG_CLASS + "handle load package");
+        Common.debugLog(TAG + TAG_CLASS + "directlyShowInPlay = "
+                + XposedInit.directlyShowInPlay);
+        XposedBridge.log(TAG + TAG_CLASS + "contain???"
+                + pref.contains(XposedInit.KEY_SHOW_IN_APP_INFO));
         pref.reload();
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_APP_INFO,
                 Common.DEFAULT_SHOW_IN_APP_INFO)) {
@@ -78,14 +82,15 @@ public class AppInfoHook {
                 lpp.classLoader);
         XposedBridge.hookAllMethods(hookClass, "onCreateView", new XC_MethodHook() {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                // final View thiz = (View) param.thisObject;
+                final Fragment thiz = (Fragment) param.thisObject;
+                Common.debugLog(TAG + TAG_CLASS + "thiz : " + thiz);
 
                 Object appEntry = XposedHelpers.getObjectField(param.thisObject, "mAppEntry");
-                XposedBridge.log(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
+                Common.debugLog(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
                 final ApplicationInfo info = (ApplicationInfo) XposedHelpers.getObjectField(
                         appEntry,
                         "info");
-                XposedBridge.log(TAG + TAG_CLASS + "we found the app info : " + info);
+                Common.debugLog(TAG + TAG_CLASS + "we found the app info : " + info);
                 XposedBridge.log(TAG + TAG_CLASS + "the package name is : " + info.packageName);
 
                 if (!RecentTaskHook.isAndroidStockApp(info.packageName)) {
@@ -97,7 +102,7 @@ public class AppInfoHook {
                     viewInPlayButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            RecentTaskHook.viewInPlay(rootView.getContext(), info.packageName);
+                            RecentTaskHook.viewInPlay(thiz.getActivity(), info.packageName);
                         }
                     });
                 }

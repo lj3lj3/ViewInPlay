@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -54,8 +53,8 @@ public class RecentTaskHook {
         if (!lpp.packageName.equals("com.android.systemui"))
             return;
         XposedBridge.log(TAG + TAG_CLASS + "handle package");
-        XposedBridge.log(TAG + TAG_CLASS + "XposedInit.KEY_SHOW_IN_RECENT_PANEL = "
-                + XposedInit.KEY_SHOW_IN_RECENT_PANEL);
+        Common.debugLog(TAG + TAG_CLASS + "directlyShowInPlay = "
+                + XposedInit.directlyShowInPlay);
 
         StringBuffer sb = new StringBuffer();
         Set<String> set = pref.getAll().keySet();
@@ -63,7 +62,7 @@ public class RecentTaskHook {
         for (Iterator<String> iterator = set.iterator(); iterator.hasNext();) {
             sb.append(iterator.next() + ", ");
         }
-        XposedBridge.log(TAG + TAG_CLASS + "keys : " + sb.toString());
+        Common.debugLog(TAG + TAG_CLASS + "keys : " + sb.toString());
         XposedBridge.log(TAG + TAG_CLASS + "contain???"
                 + pref.contains(XposedInit.KEY_SHOW_IN_RECENT_PANEL));
 
@@ -92,9 +91,10 @@ public class RecentTaskHook {
                 // if the app is stock app, we should not show the 'view in
                 // play' menu
                 String pkgName = getPackageName(viewHolder);
-                Log.d(TAG, TAG_CLASS + "the package is : " + pkgName);
+                XposedBridge.log(TAG + TAG_CLASS + "the package is : " + pkgName);
                 if (isAndroidStockApp(pkgName)) {
                     // stock app, return
+                    XposedBridge.log(TAG + TAG_CLASS + "stock app");
                     return;
                 }
 
@@ -104,7 +104,7 @@ public class RecentTaskHook {
                 popup.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO);
                 // popup.getMenu().add(Menu.NONE, ID_OPEN_IN_HALO, 3,
                 // TEXT_OPEN_IN_HALO);
-                Log.d(TAG, TAG_CLASS + "show the vip menu : " + pkgName);
+                Common.debugLog(TAG + TAG_CLASS + "show the vip menu : " + pkgName);
                 popup.getMenu().add(Menu.NONE, ID_VIEW_IN_PLAY, 4, TEXT_VIEW_IN_PLAY);
 
                 try {
@@ -265,28 +265,37 @@ public class RecentTaskHook {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        checkPlay(ctx, intent);
+
+        ctx.startActivity(intent);
+    }
+
+    private static void checkPlay (Context ctx, Intent intent){
         List<ResolveInfo> list = ctx.getPackageManager().queryIntentActivities(intent, 0);
+        XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay:" + XposedInit.directlyShowInPlay);
         if (XposedInit.directlyShowInPlay) {
             String pkgName;
+            Common.debugLog(TAG + TAG_CLASS + "size:" + list.size());
             for (int i = 0; i < list.size(); i++) {
                 ActivityInfo info = list.get(i).activityInfo;
-                XposedBridge.log(TAG + TAG_CLASS + "the package name is " + info.packageName);
+                Common.debugLog(TAG + TAG_CLASS + "the package name is " + info.packageName);
                 pkgName = info.packageName;
                 if (pkgName.equals("com.android.vending")) {
                     XposedBridge.log(TAG + TAG_CLASS + "we found it : " + pkgName);
                     String appInfo = info.toString();
-                    XposedBridge.log(TAG + TAG_CLASS + "app info string : " + appInfo);
+                    Common.debugLog(TAG + TAG_CLASS + "app info string : " + appInfo);
                     String activityName = appInfo.substring(
                             appInfo.lastIndexOf(" ") + 1, appInfo.length() - 1);
-                    XposedBridge.log(TAG + TAG_CLASS + "activity name : " + activityName);
+                    Common.debugLog(TAG + TAG_CLASS + "activity name : " + activityName);
                     intent.setComponent(new ComponentName(pkgName, activityName));
-                    break;
+                    return;
                 }
             }
-            XposedBridge.log(TAG + TAG_CLASS + "user wants to show [" + packageName + "] in the play, but no play here, pity");
+            XposedBridge.log(TAG + TAG_CLASS + "no play here, pity");
             // if didn't find the Google Play Store, show the toast
-            Toast.makeText(ctx, R.string.no_play_on_the_phone, Toast.LENGTH_LONG).show();
+            // TODO Toast may can not show by system, so we should do later about it, maybe a broadcast instead
+//            Toast.makeText(ctx, R.string.no_play_on_the_phone, Toast.LENGTH_LONG).show();
         }
-        ctx.startActivity(intent);
     }
 }
