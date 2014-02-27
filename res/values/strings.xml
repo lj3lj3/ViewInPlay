@@ -16,6 +16,7 @@
     <string name="key_show_in_app_info">show_in_app_info</string>
     <string name="key_directly_show_in_play">directly_show_in_play</string>
     <string name="key_pref_layout">key_pref_layout</string>
+    <string name="key_hide_icon">hide_icon</string>
     
     <string name="pref_title_show_in_recent_panel">Show in recent panel</string>
     <string name="pref_summary_show_in_recent_panel_on">"the 'view in play' menu will show in the long press pupop menu in the recent task panel"</string>
@@ -32,6 +33,12 @@
     <string name="pref_summary_xda">Click to visit the XDA thread of ViewInPlay module</string>
     <string name="pref_title_about">About</string>
     <string name="pref_summary_about_version">Version 1.0.1</string>
+    <string name="pref_title_hide_icon">Hide icon from launcher</string>
+    <string name="pref_summary_hide_icon_on">"the app icon from the launcher can not bring back, unless reinstall this app. find me in the Xposed Module list."</string>
+    <string name="pref_summary_hide_icon_off">check to hide the icon from the launcher</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">only come from your launcher can toggle this checkboxxxxx</string>
+    <string name="pref_title_extra">Extra</string>
     
     <string name="no_play_on_the_phone">oh~ no Google Play Store??? if you sure you have it, please contact me :)</string>
+    <string name="notice_hide_icon">"Are you sure? once hide, can't bring it back unless reinstall the app for now"</string>
 </resources>

@@ -21,30 +21,28 @@
         android:summaryOn="@string/pref_summary_directly_view_in_play_on"
         android:title="@string/pref_title_directly_view_in_play" />
 
+    <PreferenceCategory android:title="@string/pref_title_extra" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_hide_icon"
+            android:summaryOff="@string/pref_summary_hide_icon_off"
+            android:summaryOn="@string/pref_summary_hide_icon_on"
+            android:title="@string/pref_title_hide_icon" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_title_note" >
         <Preference
             android:selectable="false"
-            android:summary="@string/pref_summary_note"
-            />
+            android:summary="@string/pref_summary_note" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_title_about" >
+        <Preference
+            android:selectable="false"
+            android:summary="@string/version_string"
+            android:title="@string/version" />
         <Preference
             android:icon="@drawable/xda_icon"
-            android:title="@string/pref_title_xda"
             android:summary="@string/pref_summary_xda"
-            />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_title_about">
-        <Preference
-            android:selectable="false"
-            android:title="@string/version"
-            android:summary="@string/version_string"
-            />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_title_about">
-        <Preference
-            android:selectable="false"
-            android:title="@string/version"
-            android:summary="@string/version_string"
-            />
+            android:title="@string/pref_title_xda" />
     </PreferenceCategory>
 
 </PreferenceScreen>
