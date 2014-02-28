@@ -12,20 +12,24 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources.InitPackageResourcesParam;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit,
         IXposedHookInitPackageResources {
     private static final String TAG = "DayL";
 
     public static XModuleResources sModRes;
-    static String MODULE_PATH = null;
-    static XSharedPreferences mPref;
 
     static String KEY_DIRECTLY_SHOW_IN_PLAY;
     static String KEY_SHOW_IN_APP_INFO;
     static String KEY_SHOW_IN_RECENT_PANEL;
-
     static boolean directlyShowInPlay = false;
 
+    private static List<String> notStockApp;
+    private static List<String> stockAndroidApp;
+    private static String MODULE_PATH = null;
+    private static XSharedPreferences mPref;
     private static TextView tvClock;
 
     public static TextView getClock() {
@@ -43,6 +47,8 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         KEY_DIRECTLY_SHOW_IN_PLAY = sModRes.getString(R.string.key_directly_show_in_play);
         KEY_SHOW_IN_RECENT_PANEL = sModRes.getString(R.string.key_show_in_recent_panel);
         KEY_SHOW_IN_APP_INFO = sModRes.getString(R.string.key_show_in_app_info);
+        notStockApp = Arrays.asList(sModRes.getStringArray(R.array.not_stock_app));
+        stockAndroidApp = Arrays.asList(sModRes.getStringArray(R.array.stock_android_app));
     }
 
     @Override
@@ -55,13 +61,14 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     }
 
     private void loadPref(final LoadPackageParam lpparam) {
-        if (!lpparam.packageName.equals("com.android.systemui") 
-                // FIXED the directly view in play not effect in the app info screen
+        if (!lpparam.packageName.equals("com.android.systemui")
+                // FIXED the directly view in play not effect in the app info
+                // screen
                 && !lpparam.packageName.equals("com.android.settings"))
             return;
 
         XposedBridge.log(TAG + "lpparam.packageName:" + lpparam.packageName);
-        
+
         mPref.reload();
         directlyShowInPlay = mPref.getBoolean(KEY_DIRECTLY_SHOW_IN_PLAY,
                 Common.DEFAULT_DIRECTLY_SHOW_IN_PLAY);
@@ -72,5 +79,17 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     @Override
     public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
         AppInfoHook.handleInitPackageResources(resparam);
+    }
+
+    public static boolean isStockAndroidApp(String pkgName) {
+        if (stockAndroidApp.contains(pkgName))
+            return true;
+        return false;
+    }
+
+    public static boolean isNotStockApp(String pkgName) {
+        if (notStockApp.contains(pkgName))
+            return true;
+        return false;
     }
 }

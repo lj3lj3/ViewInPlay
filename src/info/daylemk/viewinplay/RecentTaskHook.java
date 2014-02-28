@@ -10,7 +10,6 @@ import android.content.res.XModuleResources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -198,11 +197,15 @@ public class RecentTaskHook {
         }
 
         // those is for the sdk version lower than 16
-        /*
-         * StatusBarManager bar = (StatusBarManager)
-         * thiz.getContext().getSystemService("statusbar"); if (bar != null) {
-         * try { bar.collapse(); return; } catch (Throwable e) { } }
-         */
+        /*StatusBarManager bar = (StatusBarManager)
+                thiz.getContext().getSystemService("statusbar");
+        if (bar != null) {
+            try {
+                bar.collapse();
+                return;
+            } catch (Throwable e) {
+            }
+        }*/
 
         new Thread() {
             @Override
@@ -248,6 +251,10 @@ public class RecentTaskHook {
      * @return
      */
     static boolean isAndroidStockApp(String pkgName) {
+        if (XposedInit.isStockAndroidApp(pkgName))
+            return true;
+        if (XposedInit.isNotStockApp(pkgName))
+            return false;
         if (pkgName.startsWith("com.android"))
             return true;
         return false;
@@ -264,14 +271,14 @@ public class RecentTaskHook {
         XposedBridge.log(TAG + TAG_CLASS + "view in play : " + packageName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
 
         checkPlay(ctx, intent);
 
         ctx.startActivity(intent);
     }
 
-    private static void checkPlay (Context ctx, Intent intent){
+    private static void checkPlay(Context ctx, Intent intent) {
         List<ResolveInfo> list = ctx.getPackageManager().queryIntentActivities(intent, 0);
         XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay:" + XposedInit.directlyShowInPlay);
         if (XposedInit.directlyShowInPlay) {
@@ -294,8 +301,10 @@ public class RecentTaskHook {
             }
             XposedBridge.log(TAG + TAG_CLASS + "no play here, pity");
             // if didn't find the Google Play Store, show the toast
-            // TODO Toast may can not show by system, so we should do later about it, maybe a broadcast instead
-//            Toast.makeText(ctx, R.string.no_play_on_the_phone, Toast.LENGTH_LONG).show();
+            // TODO Toast may can not show by system, so we should do later
+            // about it, maybe a broadcast instead
+            // Toast.makeText(ctx, R.string.no_play_on_the_phone,
+            // Toast.LENGTH_LONG).show();
         }
     }
 }

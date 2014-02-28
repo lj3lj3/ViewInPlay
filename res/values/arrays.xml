@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stock_android_app">
+        <item></item>
+    </string-array>
+    <string-array name="not_stock_app">
+        <item>com.android.chrome</item>
+    </string-array>
+</resources>

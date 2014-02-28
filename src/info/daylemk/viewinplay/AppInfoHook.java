@@ -105,6 +105,8 @@ public class AppInfoHook {
                             RecentTaskHook.viewInPlay(thiz.getActivity(), info.packageName);
                         }
                     });
+                } else {
+                    XposedBridge.log(TAG + TAG_CLASS + "stock app : " + info.packageName);
                 }
             }
         });

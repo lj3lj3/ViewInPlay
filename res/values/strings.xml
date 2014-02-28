@@ -28,11 +28,11 @@
     <string name="pref_summary_directly_view_in_play_on">directly view in Google Play, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
     <string name="pref_title_note">Note</string>
-    <string name="pref_summary_note">After change, Please reboot your phone</string>
+    <!-- this may be edit often -->
+    <string name="pref_summary_note">After change or upgrade, Please reboot your phone</string>
     <string name="pref_title_xda">XDA thread</string>
     <string name="pref_summary_xda">Click to visit the XDA thread of ViewInPlay module</string>
     <string name="pref_title_about">About</string>
-    <string name="pref_summary_about_version">Version 1.0.1</string>
     <string name="pref_title_hide_icon">Hide icon from launcher</string>
     <string name="pref_summary_hide_icon_on">"the app icon from the launcher can not bring back, unless reinstall this app. find me in the Xposed Module list."</string>
     <string name="pref_summary_hide_icon_off">check to hide the icon from the launcher</string>
