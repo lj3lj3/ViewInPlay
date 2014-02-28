@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="version">1.0.1</string>
+	<!-- <string name="version">1.0.1</string> -->
 	<string name="version_string">Versione</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Impostazioni</string>
@@ -30,7 +30,6 @@
     <string name="pref_title_xda">Discussione su XDA</string>
     <string name="pref_summary_xda">Clicca per visitare la discussione del modulo ViewInPlay su XDA</string>
     <string name="pref_title_about">Info</string>
-    <string name="pref_summary_about_version">Versione 1.0.1</string>
 
     <string name="no_play_on_the_phone">oh~ non hai il Google Play Store??? se sei sicuro di averlo, per favore contattami :)</string>
 </resources>

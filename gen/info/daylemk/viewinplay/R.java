@@ -42,9 +42,8 @@ public final class R {
         public static final int key_directly_show_in_play=0x7f07000c;
         public static final int key_show_in_app_info=0x7f07000b;
         public static final int key_show_in_recent_panel=0x7f07000a;
-        public static final int no_play_on_the_phone=0x7f07001c;
+        public static final int no_play_on_the_phone=0x7f07001b;
         public static final int notif_app_info=0x7f070008;
-        public static final int pref_summary_about_version=0x7f07001b;
         public static final int pref_summary_directly_view_in_play_off=0x7f070015;
         public static final int pref_summary_directly_view_in_play_on=0x7f070014;
         public static final int pref_summary_note=0x7f070017;
@@ -62,6 +61,8 @@ public final class R {
         public static final int recents_app_info=0x7f070007;
         public static final int recents_remove_from_list=0x7f070006;
         public static final int version=0x7f070000;
+        /**  <string name="version">1.0.1</string> 
+         */
         public static final int version_string=0x7f070001;
         public static final int view_in_play=0x7f070009;
         public static final int xposed_description=0x7f070005;
@@ -77,6 +78,7 @@ public final class R {
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
 
     
+ <item name="android:windowTranslucentNavigation">true</item> 
          */
         public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
