@@ -5,27 +5,27 @@
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="xposed_description">"this module add 'view in play' menu to the recent task long press pupop menu and app info screen."</string>
+    <string name="xposed_description">"this module add 'view in play' menu to the recent task long press popup menu and app info screen."</string>
 
     <string name="recents_remove_from_list">Remove from list</string>
     <string name="recents_app_info">@string/notif_app_info</string>
     <string name="notif_app_info">App info</string>
     <string name="view_in_play">View in Play</string>
-     
+
     <string name="key_show_in_recent_panel">show_in_recent_panel</string>
     <string name="key_show_in_app_info">show_in_app_info</string>
     <string name="key_directly_show_in_play">directly_show_in_play</string>
     <string name="key_pref_layout">key_pref_layout</string>
     <string name="key_hide_icon">hide_icon</string>
-    
+
     <string name="pref_title_show_in_recent_panel">Show in recent panel</string>
     <string name="pref_summary_show_in_recent_panel_on">"the 'view in play' menu will show in the long press pupop menu in the recent task panel"</string>
     <string name="pref_summary_show_in_recent_panel_off"></string>
     <string name="pref_title_show_in_app_info">Show in app info screen</string>
     <string name="pref_summary_show_in_app_info_on">"the 'view in play' menu will show in the app info screen"</string>
     <string name="pref_summary_show_in_app_info_off"></string>
-    <string name="pref_title_directly_view_in_play">Directly view in google play</string>
-    <string name="pref_summary_directly_view_in_play_on">directly view in google play, not show the app chooser screen</string>
+    <string name="pref_title_directly_view_in_play">Directly view in Google Play</string>
+    <string name="pref_summary_directly_view_in_play_on">directly view in Google Play, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
     <string name="pref_title_note">Note</string>
     <string name="pref_summary_note">After change, Please reboot your phone</string>

@@ -73,6 +73,8 @@ public final class R {
         public static final int recents_app_info=0x7f080007;
         public static final int recents_remove_from_list=0x7f080006;
         public static final int version=0x7f080000;
+        /**  <string name="version">1.0.1</string> 
+         */
         public static final int version_string=0x7f080001;
         public static final int view_in_play=0x7f080009;
         public static final int xposed_description=0x7f080005;
@@ -88,6 +90,7 @@ public final class R {
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
 
     
+ <item name="android:windowTranslucentNavigation">true</item> 
          */
         public static final int AppBaseTheme=0x7f090000;
         /**  Application theme. 

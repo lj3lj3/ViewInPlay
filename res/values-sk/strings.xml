@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="version_string">Verzia</string>
+    <string name="app_name">ViewInPlay</string>
+    <string name="action_settings">Nastavenia</string>
+    <string name="xposed_description">"this module add 'view in play' menu to the recent task long press pupop menu and app info screen."</string>
+
+    <string name="recents_remove_from_list">Odstrániť zo zoznamu</string>
+    <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="notif_app_info">Informácie o aplikácii</string>
+    <string name="view_in_play">Zobraziť v Obchode</string>
+    
+    <string name="pref_title_show_in_recent_panel">Zobraziť v panely nedávnych aplikácií</string>
+    <string name="pref_summary_show_in_recent_panel_on">"Možnosť 'Zobraziť v Obchode' bude zobrazená v kontextovej ponuke v panely nedávnych aplikácií"</string>
+    <string name="pref_summary_show_in_recent_panel_off"></string>
+    <string name="pref_title_show_in_app_info">Zobraziť na obrazovke Informácie o aplikácii</string>
+    <string name="pref_summary_show_in_app_info_on">"Možnosť 'Zobraziť v Obchode' bude zobrazená na obrazovke Informácie o aplikáciithe"</string>
+    <string name="pref_summary_show_in_app_info_off"></string>
+    <string name="pref_title_directly_view_in_play">Otvoriť priamo v Obchode Google Play</string>
+    <string name="pref_summary_directly_view_in_play_on">Otvorí priamo v Obchode Google Play, nezobrazí možnosť Dokončiť akciu pomocou aplikácie</string>
+    <string name="pref_summary_directly_view_in_play_off">Zobrazí Dokončiť akciu pomocou aplikácie</string>
+    <string name="pref_title_note">Poznámka</string>
+    <string name="pref_summary_note">Po zmene prosím reštartujte zariadenie</string>
+    <string name="pref_title_xda">XDA fórum</string>
+    <string name="pref_summary_xda">Kliknite pre zobrazenie modulu ViewInPlay na fóre XDA</string>
+    <string name="pref_title_about">O aplikácii</string>
+    
+    <string name="no_play_on_the_phone">Ale nie, žiadny Obchod Google Play??? Ak ste si istí, že ho máte, kontaktujte ma prosím :)</string>
+</resources>
