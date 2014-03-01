@@ -22,7 +22,7 @@ import android.widget.ListView;
 public class SettingsFragment extends PreferenceFragment implements
         OnSharedPreferenceChangeListener {
     private static final String TAG = "DayL";
-    private static final String TAG_CLASS = "SettingsFragment";
+//    private static final String TAG_CLASS = "[SettingsFragment]";
 
     public static final String TAG_OF_FRAGMENT = "SettingsFragment";
 

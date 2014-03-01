@@ -2,7 +2,6 @@
 package info.daylemk.viewinplay;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,12 +16,12 @@ public class SettingsActivity extends Activity {
         this.setContentView(R.layout.activity_settings);
 
         this.getActionBar().setBackgroundDrawable(
-                new ColorDrawable(this.getResources().getColor(android.R.color.holo_green_light)));
+                new ColorDrawable(this.getResources().getColor(android.R.color.holo_green_dark)));
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
             tintManager.setStatusBarTintEnabled(true);
-            int actionBarColor = this.getResources().getColor(android.R.color.holo_green_light);
+            int actionBarColor = this.getResources().getColor(android.R.color.holo_green_dark);
             tintManager.setStatusBarTintColor(actionBarColor);
         }
 

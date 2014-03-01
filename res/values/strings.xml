@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="version">1.0.1</string>
+	<string name="version">1.0.2</string>
 	<string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Settings</string>
@@ -28,7 +28,7 @@
     <string name="pref_summary_directly_view_in_play_on">directly view in Google Play, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
     <string name="pref_title_note">Note</string>
-    <!-- this may be edit often -->
+    <!-- this may be edited often -->
     <string name="pref_summary_note">After change or upgrade, Please reboot your phone</string>
     <string name="pref_title_xda">XDA thread</string>
     <string name="pref_summary_xda">Click to visit the XDA thread of ViewInPlay module</string>
