@@ -27,7 +27,7 @@
     <string name="pref_title_directly_view_in_play">Direkt im Play Store anzeigen</string>
     <string name="pref_summary_directly_view_in_play_on">Direkt im Play Store anzeigen, ohne die App-Auswahl anzuzeigen</string>
     <string name="pref_summary_directly_view_in_play_off">Zeigt die App-Auswahl an, um eine bestimmt App auszuwählen</string>
-    <string name="pref_title_note">Note</string>
+    <string name="pref_title_note">Anmerkung</string>
     <!-- this may be edited often -->
     <string name="pref_summary_note">Nach Änderung oder Upgrade bitte das Gerät neustarten</string>
     <string name="pref_title_xda">XDA thread</string>
@@ -37,7 +37,7 @@
     <string name="pref_summary_hide_icon_on">"Das App-Symbol kann nicht wieder eingeblendet werden, oh die App neu zu installieren. Einstellungen sind noch in der Modulliste des Xposed-Installers zu finden."</string>
     <string name="pref_summary_hide_icon_off">Auswählen, um das App-Symbol aus der App-Übersicht auszublenden</string>
     <string name="pref_summary_hide_icon_not_from_launcher">Diese Checkbox kann nur direkt vom Launcher aus geschaltet werden</string>
-    <string name="pref_title_extra">Extra</string>
+    <string name="pref_title_extra">Extras</string>
     
     <string name="no_play_on_the_phone">Oh - kein Google Play Store??? Falls du dir sicher bist, dass du ihn doch hast, kontaktiere mich bitte :)</string>
     <string name="notice_hide_icon">"Bist du sicher? Einmal versteckt kann das Symbol bis jetzt nur durch Neuinstallation zurückgebracht werden"</string>
