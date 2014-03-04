@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="version">1.0.2</string>
-	<string name="version_string">Version</string>
+    <string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Einstellungen</string>
     <string name="hello_world">Hallo Welt!</string>
