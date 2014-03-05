@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="version">1.0.2</string>
 	<string name="version_string">Versione</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Impostazioni</string>
@@ -11,12 +10,6 @@
     <string name="recents_app_info">@string/notif_app_info</string>
     <string name="notif_app_info">Informazioni applicazione</string>
     <string name="view_in_play">Mostra nel Play Store</string>
-
-    <string name="key_show_in_recent_panel">show_in_recent_panel</string>
-    <string name="key_show_in_app_info">show_in_app_info</string>
-    <string name="key_directly_show_in_play">directly_show_in_play</string>
-    <string name="key_pref_layout">key_pref_layout</string>
-    <string name="key_hide_icon">hide_icon</string>
 
     <string name="pref_title_show_in_recent_panel">Mostra in \'App recenti\' </string>
     <string name="pref_summary_show_in_recent_panel_on">"il menu 'mostra nel play store' sarà mostrato nel pannello 'App recenti' con una pressione prolungata"</string>
