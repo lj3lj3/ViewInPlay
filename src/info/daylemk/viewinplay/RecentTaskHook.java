@@ -6,16 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.content.res.XModuleResources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -35,17 +42,22 @@ public class RecentTaskHook {
     // static String TEXT_OPEN_IN_HALO;
     static String TEXT_REMOVE_FROM_LIST;
     static String TEXT_VIEW_IN_PLAY;
+    static String TEXT_NO_PLAY;
 
     static final int ID_REMOVE_FROM_LIST = 1000;
     static final int ID_APP_INFO = 2000;
     // static final int ID_OPEN_IN_HALO = 3000;
     static final int ID_VIEW_IN_PLAY = 4000;
 
+    private static RecentsOnTouchLis sTouchListener;
+    private static int id_app_thumbnail = -1;
+
     public static void initZygote(XModuleResources module_res) {
         TEXT_APP_INFO = module_res.getString(R.string.recents_app_info);
         // TEXT_OPEN_IN_HALO = module_res.getString(R.string.recents_open_halo);
         TEXT_REMOVE_FROM_LIST = module_res.getString(R.string.recents_remove_from_list);
         TEXT_VIEW_IN_PLAY = module_res.getString(R.string.view_in_play);
+        TEXT_NO_PLAY = module_res.getString(R.string.no_play_on_the_phone);
     }
 
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
@@ -66,6 +78,9 @@ public class RecentTaskHook {
                 + pref.contains(XposedInit.KEY_SHOW_IN_RECENT_PANEL));
 
         pref.reload();
+        
+        injectTouchEvents(lpp);
+        
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_RECENT_PANEL,
                 Common.DEFAULT_SHOW_IN_RECENT_PANEL)) {
             injectMenu(lpp);
@@ -185,6 +200,144 @@ public class RecentTaskHook {
                 param.setResult(null);
             }
         });
+
+        XposedBridge.hookAllMethods(hookClass, "handleOnClick", new XC_MethodHook() {
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                // the touch listener is null??? any way, return
+                if(sTouchListener == null){
+                    return;
+                }
+                // not the two finger click action, return
+                if(!sTouchListener.twoFingerClick){
+                    return;
+                }
+                
+                XposedBridge.log(TAG + TAG_CLASS + "playing in the onClicks");
+                
+                final View thiz = (View) param.thisObject;
+                final View selectedView = (View) param.args[0];
+
+                final Object viewHolder = selectedView.getTag();
+
+                // if the app is stock app, we should not show the 'view in
+                // play' menu
+                String pkgName = getPackageName(viewHolder);
+                XposedBridge.log(TAG + TAG_CLASS + "the package is : " + pkgName);
+                if (isAndroidStockApp(pkgName)) {
+                    // stock app, return
+                    XposedBridge.log(TAG + TAG_CLASS + "stock app");
+                    return;
+                }
+
+                closeRecentApps(thiz);
+                // Object ad = viewHolder.getClass()
+                // .getDeclaredField("taskDescription")
+                // .get(viewHolder);
+                // String pkg_name = (String)
+                // ad.getClass()
+                // .getDeclaredField("packageName").get(ad);
+                viewInPlay(thiz.getContext(), getPackageName(viewHolder));
+                
+                sTouchListener.twoFingerClick = false;
+                
+                param.setResult(null);
+            }
+        });
+    }
+
+    private static void injectTouchEvents(final LoadPackageParam lpp) {
+        XposedBridge.log(TAG + TAG_CLASS + "in inject touch eventss");
+        final Class<?> hookClass = XposedHelpers.findClass(
+                "com.android.systemui.recent.RecentsVerticalScrollView",
+                lpp.classLoader);
+        XposedBridge.hookAllMethods(hookClass, "update", new XC_MethodHook() {
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                final Object thiz = param.thisObject;
+                final ScrollView sv = (ScrollView) thiz;
+//                Resources res = sv.getContext().getResources();
+
+//                if (id_app_thumbnail == -1) {
+//                    id_app_thumbnail = res.getIdentifier("app_thumbnail", "id",
+//                            "com.android.systemui");
+//                    XposedBridge.log(TAG + TAG_CLASS + "identifier 2: " + id_app_thumbnail);
+//                }
+
+                LinearLayout mLinearLayout = null;
+                try {
+                    mLinearLayout = (LinearLayout) thiz.getClass()
+                            .getDeclaredField("mLinearLayout").get(thiz);
+                } catch (Exception e) {
+                    // User on ICS
+                }
+                if (mLinearLayout != null) {
+                    XposedBridge.log(TAG + TAG_CLASS + "in inject touch events, OK");
+                    if(sTouchListener == null){
+                        sTouchListener = new RecentsOnTouchLis();
+                    }
+                    FrameLayout frameLayout;
+                    for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+                        XposedBridge.log(TAG + TAG_CLASS + "i = " + i);
+                        frameLayout = (FrameLayout) mLinearLayout.getChildAt(i);
+                        frameLayout.setOnTouchListener(sTouchListener);
+                        // vTemp.setOnClickListener(new View.OnClickListener() {
+                        // @Override
+                        // public void onClick(View v) {
+                        // Toast.makeText(sv.getContext(), "text",
+                        // Toast.LENGTH_SHORT).show();
+                        // }
+                        // });
+                    }
+                    /*
+                     * frameLayout.setOnClickListener(null); View RelativeView =
+                     * frameLayout.getChildAt(0); XposedBridge.log(TAG +
+                     * TAG_CLASS + "the layout inside is " + RelativeView);
+                     * ViewGroup layout = (ViewGroup)RelativeView; for (int j =
+                     * 0; j < layout.getChildCount(); j ++){ View frameView =
+                     * layout.getChildAt(j); XposedBridge.log(TAG + TAG_CLASS +
+                     * "the count : " + j + ", view is" + frameView);
+                     * if(frameView instanceof ViewGroup){ XposedBridge.log(TAG
+                     * + TAG_CLASS + "the layout inside of inside is " +
+                     * frameView); ViewGroup layoutGroup = (ViewGroup)frameView;
+                     * XposedBridge.log(TAG + TAG_CLASS +
+                     * "the layout inside of inside of inside is " +
+                     * layoutGroup); // layoutGroup.setOnClickListener(null); }
+                     * }
+                     */
+                    // }
+                } else {
+                    XposedBridge.log(TAG + TAG_CLASS
+                            + "in inject touch events, can't get linearLayout");
+                }
+            }
+        });
+    }
+
+    private static class RecentsOnTouchLis implements View.OnTouchListener {
+        public boolean twoFingerClick;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            XposedBridge.log(TAG + TAG_CLASS + "on touch, v : " + v + ", events : " + event);
+            XposedBridge.log(TAG + TAG_CLASS + "events, action : " + event.getAction());
+            XposedBridge
+                    .log(TAG + TAG_CLASS + "events, pointer count : " + event.getPointerCount());
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                XposedBridge
+                        .log(TAG + TAG_CLASS + "events, pointer DOWN");
+                if (event.getPointerCount() == 2) {
+                    XposedBridge
+                            .log(TAG + TAG_CLASS + "events, TWO ON");
+                    twoFingerClick = true;
+                } else {
+                    XposedBridge
+                            .log(TAG + TAG_CLASS + "events, TWO OFF");
+                    // if not two finger, set it to false
+                    twoFingerClick = false;
+                }
+            }
+
+            return false;
+        }
     }
 
     private static void closeRecentApps(View thiz) {
@@ -197,15 +350,11 @@ public class RecentTaskHook {
         }
 
         // those is for the sdk version lower than 16
-        /*StatusBarManager bar = (StatusBarManager)
-                thiz.getContext().getSystemService("statusbar");
-        if (bar != null) {
-            try {
-                bar.collapse();
-                return;
-            } catch (Throwable e) {
-            }
-        }*/
+        /*
+         * StatusBarManager bar = (StatusBarManager)
+         * thiz.getContext().getSystemService("statusbar"); if (bar != null) {
+         * try { bar.collapse(); return; } catch (Throwable e) { } }
+         */
 
         new Thread() {
             @Override
@@ -303,8 +452,9 @@ public class RecentTaskHook {
             // if didn't find the Google Play Store, show the toast
             // TODO Toast may can not show by system, so we should do later
             // about it, maybe a broadcast instead
-            // Toast.makeText(ctx, R.string.no_play_on_the_phone,
-            // Toast.LENGTH_LONG).show();
+            // DONE just need to get the resource at init moment
+            Toast.makeText(ctx, TEXT_NO_PLAY,
+                    Toast.LENGTH_LONG).show();
         }
     }
 }
