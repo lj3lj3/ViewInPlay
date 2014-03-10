@@ -5,5 +5,6 @@
     </string-array>
     <string-array name="not_stock_app">
         <item>com.android.chrome</item>
+        <item>com.android.droidliveplayer</item>
     </string-array>
 </resources>
