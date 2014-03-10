@@ -3,7 +3,7 @@
 	<string name="version_string">Verzia</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Nastavenia</string>
-    <string name="xposed_description">"this module add 'view in play' menu to the recent task long press pupop menu and app info screen."</string>
+    <string name="xposed_description">"Tento modul pridá 'Zobraziť v Obchode' do kontextového menu v panely nedávnych aplikácií."</string>
 
     <string name="recents_remove_from_list">Odstrániť zo zoznamu</string>
     <string name="recents_app_info">@string/notif_app_info</string>
@@ -24,6 +24,12 @@
     <string name="pref_title_xda">XDA fórum</string>
     <string name="pref_summary_xda">Kliknite pre zobrazenie modulu ViewInPlay na fóre XDA</string>
     <string name="pref_title_about">O aplikácii</string>
+    <string name="pref_title_hide_icon">Skryť ikonu v menu</string>
+    <string name="pref_summary_hide_icon_on">"Ikona aplikácie sa nedá vrátiť späť, zobrazí sa až po preinštalovaní aplikácie. Nájdeš ma v zozname modulov v Xposed."</string>
+    <string name="pref_summary_hide_icon_off">Označte pre skrytie ikony z menu aplikácií</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">Iba cez menu aplikácií je možné toto zapnúť.</string>
+    <string name="pref_title_extra">Extra</string>
     
     <string name="no_play_on_the_phone">Ale nie, žiadny Obchod Google Play??? Ak ste si istí, že ho máte, kontaktujte ma prosím :)</string>
+    <string name="notice_hide_icon">"Ste si istí? Po skrytí bude možné ikonu vrátiť len preinštalovaním aplikácie."</string>
 </resources>
