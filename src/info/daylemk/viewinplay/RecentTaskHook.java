@@ -32,6 +32,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class RecentTaskHook {
@@ -39,10 +40,15 @@ public class RecentTaskHook {
     private static final String TAG_CLASS = "[RecentTaskHook]";
 
     static String TEXT_APP_INFO;
+    // the string of the app info read from android
+    static String TEXT_APP_INFO_STOCK = null;
     // static String TEXT_OPEN_IN_HALO;
     static String TEXT_REMOVE_FROM_LIST;
+    // the string of remove from list read from android
+    static String TEXT_REMOVE_FROM_LIST_STOCK = null;
     static String TEXT_VIEW_IN_PLAY;
     static String TEXT_NO_PLAY;
+    static String TEXT_STOCK_APP;
 
     static final int ID_REMOVE_FROM_LIST = 1000;
     static final int ID_APP_INFO = 2000;
@@ -58,6 +64,7 @@ public class RecentTaskHook {
         TEXT_REMOVE_FROM_LIST = module_res.getString(R.string.recents_remove_from_list);
         TEXT_VIEW_IN_PLAY = module_res.getString(R.string.view_in_play);
         TEXT_NO_PLAY = module_res.getString(R.string.no_play_on_the_phone);
+        TEXT_STOCK_APP = module_res.getString(R.string.stock_app);
     }
 
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
@@ -78,9 +85,12 @@ public class RecentTaskHook {
                 + pref.contains(XposedInit.KEY_SHOW_IN_RECENT_PANEL));
 
         pref.reload();
-        
-        injectTouchEvents(lpp);
-        
+
+        if (pref.getBoolean(XposedInit.KEY_DOUBLE_IN_RECENT_PANEL,
+                Common.DEFAULT_DOUBLE_IN_RECENT_PANEL)) {
+            injectTouchEvents(lpp);
+        }
+
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_RECENT_PANEL,
                 Common.DEFAULT_SHOW_IN_RECENT_PANEL)) {
             injectMenu(lpp);
@@ -99,6 +109,36 @@ public class RecentTaskHook {
                 final View anchorView = (View) param.args[1];
                 final View thumbnailView = (View) param.args[2];
 
+                if (TEXT_REMOVE_FROM_LIST_STOCK == null || TEXT_APP_INFO_STOCK == null) {
+                    Resources res = thiz.getContext().getResources();
+                    boolean exceptted = false;
+                    try {
+                        TEXT_REMOVE_FROM_LIST_STOCK = res.getString(res.getIdentifier(
+                                "status_bar_recent_remove_item_title", "string",
+                                "com.android.systemui"));
+                        TEXT_APP_INFO_STOCK = res.getString(res.getIdentifier(
+                                "status_bar_recent_inspect_item_title", "string",
+                                "com.android.systemui"));
+                    } catch (Exception e) {
+                        exceptted = true;
+                    }
+
+                    // if we have exception here
+                    // if the text is null
+                    // if the text is empty
+                    // in this condition, we all needs set the text to the default
+                    if (exceptted || TEXT_REMOVE_FROM_LIST_STOCK == null
+                            || TEXT_APP_INFO_STOCK == null
+                            || TEXT_REMOVE_FROM_LIST_STOCK.equals("")
+                            || TEXT_APP_INFO_STOCK.equals("")) {
+                        XposedBridge.log(TAG + TAG_CLASS + "set the text to the default ");
+                        TEXT_REMOVE_FROM_LIST_STOCK = TEXT_REMOVE_FROM_LIST;
+                        TEXT_APP_INFO_STOCK = TEXT_APP_INFO;
+                    } else {
+                        Common.debugLog(TAG + TAG_CLASS + "got the text");
+                    }
+                }
+
                 thumbnailView.setSelected(true);
                 final Object viewHolder = selectedView.getTag();
 
@@ -114,8 +154,8 @@ public class RecentTaskHook {
 
                 PopupMenu popup = new PopupMenu(thiz.getContext(),
                         anchorView == null ? selectedView : anchorView);
-                popup.getMenu().add(Menu.NONE, ID_REMOVE_FROM_LIST, 1, TEXT_REMOVE_FROM_LIST);
-                popup.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO);
+                popup.getMenu().add(Menu.NONE, ID_REMOVE_FROM_LIST, 1, TEXT_REMOVE_FROM_LIST_STOCK);
+                popup.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO_STOCK);
                 // popup.getMenu().add(Menu.NONE, ID_OPEN_IN_HALO, 3,
                 // TEXT_OPEN_IN_HALO);
                 Common.debugLog(TAG + TAG_CLASS + "show the vip menu : " + pkgName);
@@ -204,28 +244,30 @@ public class RecentTaskHook {
         XposedBridge.hookAllMethods(hookClass, "handleOnClick", new XC_MethodHook() {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 // the touch listener is null??? any way, return
-                if(sTouchListener == null){
+                if (sTouchListener == null) {
                     return;
                 }
                 // not the two finger click action, return
-                if(!sTouchListener.twoFingerClick){
+                if (!sTouchListener.twoFingerClick) {
                     return;
                 }
-                
-                XposedBridge.log(TAG + TAG_CLASS + "playing in the onClicks");
-                
+                sTouchListener.twoFingerClick = false;
+
+                XposedBridge.log(TAG + TAG_CLASS + "playing in the onClick");
+
                 final View thiz = (View) param.thisObject;
                 final View selectedView = (View) param.args[0];
 
                 final Object viewHolder = selectedView.getTag();
 
-                // if the app is stock app, we should not show the 'view in
-                // play' menu
+                // if the app is stock app, we should not go to plays
                 String pkgName = getPackageName(viewHolder);
                 XposedBridge.log(TAG + TAG_CLASS + "the package is : " + pkgName);
                 if (isAndroidStockApp(pkgName)) {
-                    // stock app, return
+                    // stock app, show toast and do nothing
                     XposedBridge.log(TAG + TAG_CLASS + "stock app");
+                    Toast.makeText(thiz.getContext(), TEXT_STOCK_APP, Toast.LENGTH_SHORT).show();
+                    param.setResult(null);
                     return;
                 }
 
@@ -237,9 +279,7 @@ public class RecentTaskHook {
                 // ad.getClass()
                 // .getDeclaredField("packageName").get(ad);
                 viewInPlay(thiz.getContext(), getPackageName(viewHolder));
-                
-                sTouchListener.twoFingerClick = false;
-                
+
                 param.setResult(null);
             }
         });
@@ -254,56 +294,38 @@ public class RecentTaskHook {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 final Object thiz = param.thisObject;
                 final ScrollView sv = (ScrollView) thiz;
-//                Resources res = sv.getContext().getResources();
+                Resources res = sv.getContext().getResources();
 
-//                if (id_app_thumbnail == -1) {
-//                    id_app_thumbnail = res.getIdentifier("app_thumbnail", "id",
-//                            "com.android.systemui");
-//                    XposedBridge.log(TAG + TAG_CLASS + "identifier 2: " + id_app_thumbnail);
-//                }
+                if (id_app_thumbnail == -1) {
+                    id_app_thumbnail = res.getIdentifier("app_thumbnail", "id",
+                            "com.android.systemui");
+                    Common.debugLog(TAG + TAG_CLASS + "identifier 2: " + id_app_thumbnail);
+                }
 
                 LinearLayout mLinearLayout = null;
                 try {
                     mLinearLayout = (LinearLayout) thiz.getClass()
                             .getDeclaredField("mLinearLayout").get(thiz);
                 } catch (Exception e) {
-                    // User on ICS
+                    XposedBridge
+                            .log(TAG + TAG_CLASS
+                                    + "Exception in linear layout, can't find mLinearLayout");
                 }
                 if (mLinearLayout != null) {
                     XposedBridge.log(TAG + TAG_CLASS + "in inject touch events, OK");
-                    if(sTouchListener == null){
+                    if (sTouchListener == null) {
                         sTouchListener = new RecentsOnTouchLis();
                     }
                     FrameLayout frameLayout;
                     for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-                        XposedBridge.log(TAG + TAG_CLASS + "i = " + i);
+                        Common.debugLog(TAG + TAG_CLASS + "order = " + i);
                         frameLayout = (FrameLayout) mLinearLayout.getChildAt(i);
-                        frameLayout.setOnTouchListener(sTouchListener);
-                        // vTemp.setOnClickListener(new View.OnClickListener() {
-                        // @Override
-                        // public void onClick(View v) {
-                        // Toast.makeText(sv.getContext(), "text",
-                        // Toast.LENGTH_SHORT).show();
-                        // }
-                        // });
+                        // frameLayout.setOnTouchListener(sTouchListener);
+                        // set the touch listener to at the thumb nail, so we
+                        // can get finger count
+                        frameLayout.findViewById(id_app_thumbnail).setOnTouchListener(
+                                sTouchListener);
                     }
-                    /*
-                     * frameLayout.setOnClickListener(null); View RelativeView =
-                     * frameLayout.getChildAt(0); XposedBridge.log(TAG +
-                     * TAG_CLASS + "the layout inside is " + RelativeView);
-                     * ViewGroup layout = (ViewGroup)RelativeView; for (int j =
-                     * 0; j < layout.getChildCount(); j ++){ View frameView =
-                     * layout.getChildAt(j); XposedBridge.log(TAG + TAG_CLASS +
-                     * "the count : " + j + ", view is" + frameView);
-                     * if(frameView instanceof ViewGroup){ XposedBridge.log(TAG
-                     * + TAG_CLASS + "the layout inside of inside is " +
-                     * frameView); ViewGroup layoutGroup = (ViewGroup)frameView;
-                     * XposedBridge.log(TAG + TAG_CLASS +
-                     * "the layout inside of inside of inside is " +
-                     * layoutGroup); // layoutGroup.setOnClickListener(null); }
-                     * }
-                     */
-                    // }
                 } else {
                     XposedBridge.log(TAG + TAG_CLASS
                             + "in inject touch events, can't get linearLayout");
@@ -318,22 +340,19 @@ public class RecentTaskHook {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             XposedBridge.log(TAG + TAG_CLASS + "on touch, v : " + v + ", events : " + event);
-            XposedBridge.log(TAG + TAG_CLASS + "events, action : " + event.getAction());
-            XposedBridge
-                    .log(TAG + TAG_CLASS + "events, pointer count : " + event.getPointerCount());
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                XposedBridge
-                        .log(TAG + TAG_CLASS + "events, pointer DOWN");
-                if (event.getPointerCount() == 2) {
+            Common.debugLog(TAG + TAG_CLASS + "events, action : " + event.getAction());
+            Common.debugLog(TAG + TAG_CLASS + "events, pointer count : " + event.getPointerCount());
+            if (event.getPointerCount() == 2) {
+                Common.debugLog(TAG + TAG_CLASS + "events, two pointer");
+                if (event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
+                    twoFingerClick = true;
+                    Common.debugLog(TAG + TAG_CLASS + "events, pointer DOWN");
                     XposedBridge
                             .log(TAG + TAG_CLASS + "events, TWO ON");
-                    twoFingerClick = true;
-                } else {
-                    XposedBridge
-                            .log(TAG + TAG_CLASS + "events, TWO OFF");
-                    // if not two finger, set it to false
-                    twoFingerClick = false;
                 }
+            } else {
+                // don't set it
+                // twoFingerClick = false;
             }
 
             return false;
@@ -400,11 +419,13 @@ public class RecentTaskHook {
      * @return
      */
     static boolean isAndroidStockApp(String pkgName) {
-        if (XposedInit.isStockAndroidApp(pkgName))
+        // to lower case
+        String pkgNameInner = pkgName.toLowerCase(Locale.ENGLISH);
+        if (XposedInit.isStockAndroidApp(pkgNameInner))
             return true;
-        if (XposedInit.isNotStockApp(pkgName))
+        if (XposedInit.isNotStockApp(pkgNameInner))
             return false;
-        if (pkgName.startsWith("com.android"))
+        if (pkgNameInner.startsWith("com.android"))
             return true;
         return false;
     }

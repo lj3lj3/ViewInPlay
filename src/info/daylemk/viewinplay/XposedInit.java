@@ -14,6 +14,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit,
         IXposedHookInitPackageResources {
@@ -24,6 +25,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     static String KEY_DIRECTLY_SHOW_IN_PLAY;
     static String KEY_SHOW_IN_APP_INFO;
     static String KEY_SHOW_IN_RECENT_PANEL;
+    static String KEY_DOUBLE_IN_RECENT_PANEL;
     static boolean directlyShowInPlay = false;
 
     private static List<String> notStockApp;
@@ -47,6 +49,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         KEY_DIRECTLY_SHOW_IN_PLAY = sModRes.getString(R.string.key_directly_show_in_play);
         KEY_SHOW_IN_RECENT_PANEL = sModRes.getString(R.string.key_show_in_recent_panel);
         KEY_SHOW_IN_APP_INFO = sModRes.getString(R.string.key_show_in_app_info);
+        KEY_DOUBLE_IN_RECENT_PANEL = sModRes.getString(R.string.key_double_in_recent_panel);
         notStockApp = Arrays.asList(sModRes.getStringArray(R.array.not_stock_app));
         stockAndroidApp = Arrays.asList(sModRes.getStringArray(R.array.stock_android_app));
     }

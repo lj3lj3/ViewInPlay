@@ -16,12 +16,18 @@
         android:title="@string/pref_title_show_in_app_info" />
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="@string/key_directly_show_in_play"
-        android:summaryOff="@string/pref_summary_directly_view_in_play_off"
-        android:summaryOn="@string/pref_summary_directly_view_in_play_on"
-        android:title="@string/pref_title_directly_view_in_play" />
+        android:key="@string/key_double_in_recent_panel"
+        android:summaryOff="@string/pref_summary_double_in_recent_panel_off"
+        android:summaryOn="@string/pref_summary_double_in_recent_panel_on"
+        android:title="@string/pref_title_double_in_recent_panel" />
 
     <PreferenceCategory android:title="@string/pref_title_extra" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_directly_show_in_play"
+            android:summaryOff="@string/pref_summary_directly_view_in_play_off"
+            android:summaryOn="@string/pref_summary_directly_view_in_play_on"
+            android:title="@string/pref_title_directly_view_in_play" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="@string/key_hide_icon"

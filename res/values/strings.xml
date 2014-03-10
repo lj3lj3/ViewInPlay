@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- delete these lines in your language file __begin -->
-	<string name="version">1.0.2-lu</string>
+	<string name="version">1.0.3</string>
 	<!-- delete these lines in your language file __end -->
 	<string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
@@ -16,6 +16,7 @@
     <!-- delete these lines in your language file __begin -->
     <string name="key_show_in_recent_panel">show_in_recent_panel</string>
     <string name="key_show_in_app_info">show_in_app_info</string>
+    <string name="key_double_in_recent_panel">double_in_recent_panel</string>
     <string name="key_directly_show_in_play">directly_show_in_play</string>
     <string name="key_pref_layout">key_pref_layout</string>
     <string name="key_hide_icon">hide_icon</string>
@@ -27,6 +28,9 @@
     <string name="pref_title_show_in_app_info">Show in app info screen</string>
     <string name="pref_summary_show_in_app_info_on">"the 'view in play' menu will show in the app info screen"</string>
     <string name="pref_summary_show_in_app_info_off"></string>
+    <string name="pref_title_double_in_recent_panel">Two-Finger go to Store</string>
+    <string name="pref_summary_double_in_recent_panel_on">"use two fingers tap the recent task thumbnail in the recent task panel to go to the Play Store"</string>
+    <string name="pref_summary_double_in_recent_panel_off"></string>
     <string name="pref_title_directly_view_in_play">Directly view in Google Play</string>
     <string name="pref_summary_directly_view_in_play_on">directly view in Google Play, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
@@ -43,5 +47,6 @@
     <string name="pref_title_extra">Extra</string>
     
     <string name="no_play_on_the_phone">oh~ no Google Play Store??? if you sure you have it, please contact me :)</string>
+    <string name="stock_app">"Sorry~ this is stock app, can't show in the Play Store."</string>
     <string name="notice_hide_icon">"Are you sure? once hide, can't bring it back unless reinstall the app for now"</string>
 </resources>
