@@ -17,7 +17,8 @@ public class Common {
 
     public static final boolean DEFAULT_SHOW_IN_RECENT_PANEL = false;
     public static final boolean DEFAULT_SHOW_IN_APP_INFO = false;
-    public static final boolean DEFAULT_DOUBLE_IN_RECENT_PANEL = false;
+    public static final boolean DEFAULT_SHOW_IN_NOTIFICATION = false;
+    public static final boolean DEFAULT_TWO_FINGER_IN_RECENT_PANEL = false;
     public static final boolean DEFAULT_DIRECTLY_SHOW_IN_PLAY = false;
 
     public static final String LOG_TAG = "ViewInPlay(SDK: " + Build.VERSION.SDK_INT + ") - ";

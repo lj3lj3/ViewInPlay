@@ -11,7 +11,6 @@ import android.content.res.XModuleResources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +29,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -50,13 +50,18 @@ public class RecentTaskHook {
     static String TEXT_NO_PLAY;
     static String TEXT_STOCK_APP;
 
-    static final int ID_REMOVE_FROM_LIST = 1000;
-    static final int ID_APP_INFO = 2000;
+    static int ID_REMOVE_FROM_LIST = 1000;
+    static int ID_APP_INFO = 2000;
     // static final int ID_OPEN_IN_HALO = 3000;
     static final int ID_VIEW_IN_PLAY = 4000;
 
     private static RecentsOnTouchLis sTouchListener;
-    private static int id_app_thumbnail = -1;
+    // 0 is a better choice
+    private static int id_app_thumbnail = 0;
+    private static int popupMenuId = 0;
+
+    private static int recentRemoveItemId = 0;
+    private static int inspectItemId = 0;
 
     public static void initZygote(XModuleResources module_res) {
         TEXT_APP_INFO = module_res.getString(R.string.recents_app_info);
@@ -86,8 +91,8 @@ public class RecentTaskHook {
 
         pref.reload();
 
-        if (pref.getBoolean(XposedInit.KEY_DOUBLE_IN_RECENT_PANEL,
-                Common.DEFAULT_DOUBLE_IN_RECENT_PANEL)) {
+        if (pref.getBoolean(XposedInit.KEY_TWO_FINGER_IN_RECENT_PANEL,
+                Common.DEFAULT_TWO_FINGER_IN_RECENT_PANEL)) {
             injectTouchEvents(lpp);
         }
 
@@ -109,36 +114,6 @@ public class RecentTaskHook {
                 final View anchorView = (View) param.args[1];
                 final View thumbnailView = (View) param.args[2];
 
-                if (TEXT_REMOVE_FROM_LIST_STOCK == null || TEXT_APP_INFO_STOCK == null) {
-                    Resources res = thiz.getContext().getResources();
-                    boolean exceptted = false;
-                    try {
-                        TEXT_REMOVE_FROM_LIST_STOCK = res.getString(res.getIdentifier(
-                                "status_bar_recent_remove_item_title", "string",
-                                "com.android.systemui"));
-                        TEXT_APP_INFO_STOCK = res.getString(res.getIdentifier(
-                                "status_bar_recent_inspect_item_title", "string",
-                                "com.android.systemui"));
-                    } catch (Exception e) {
-                        exceptted = true;
-                    }
-
-                    // if we have exception here
-                    // if the text is null
-                    // if the text is empty
-                    // in this condition, we all needs set the text to the default
-                    if (exceptted || TEXT_REMOVE_FROM_LIST_STOCK == null
-                            || TEXT_APP_INFO_STOCK == null
-                            || TEXT_REMOVE_FROM_LIST_STOCK.equals("")
-                            || TEXT_APP_INFO_STOCK.equals("")) {
-                        XposedBridge.log(TAG + TAG_CLASS + "set the text to the default ");
-                        TEXT_REMOVE_FROM_LIST_STOCK = TEXT_REMOVE_FROM_LIST;
-                        TEXT_APP_INFO_STOCK = TEXT_APP_INFO;
-                    } else {
-                        Common.debugLog(TAG + TAG_CLASS + "got the text");
-                    }
-                }
-
                 thumbnailView.setSelected(true);
                 final Object viewHolder = selectedView.getTag();
 
@@ -152,17 +127,87 @@ public class RecentTaskHook {
                     return;
                 }
 
-                PopupMenu popup = new PopupMenu(thiz.getContext(),
+                Resources res = thiz.getContext().getResources();
+                if (recentRemoveItemId == 0) {
+                    recentRemoveItemId = res.getIdentifier("recent_remove_item", "id",
+                            "com.android.systemui");
+                }
+                XposedBridge.log(TAG + TAG_CLASS + "the recent remove menu id is "
+                        + recentRemoveItemId);
+                if (recentRemoveItemId != 0) {
+                    ID_REMOVE_FROM_LIST = recentRemoveItemId;
+                }
+
+                if (inspectItemId == 0) {
+                    inspectItemId = res.getIdentifier("recent_inspect_item", "id",
+                            "com.android.systemui");
+                }
+                XposedBridge
+                        .log(TAG + TAG_CLASS + "the recent inspect menu id is " + inspectItemId);
+                if (inspectItemId != 0) {
+                    ID_APP_INFO = inspectItemId;
+                }
+
+                PopupMenu mPopupMenu = new PopupMenu(thiz.getContext(),
                         anchorView == null ? selectedView : anchorView);
-                popup.getMenu().add(Menu.NONE, ID_REMOVE_FROM_LIST, 1, TEXT_REMOVE_FROM_LIST_STOCK);
-                popup.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO_STOCK);
+
+                if (popupMenuId == 0) {
+                    popupMenuId = res.getIdentifier("recent_popup_menu", "menu",
+                            "com.android.systemui");
+                }
+
+                // if we didn't get the menu xml, we should build it
+                if (popupMenuId == 0) {
+                    if (TEXT_REMOVE_FROM_LIST_STOCK == null || TEXT_APP_INFO_STOCK == null) {
+
+                        boolean exceptted = false;
+                        try {
+                            TEXT_REMOVE_FROM_LIST_STOCK = res.getString(res.getIdentifier(
+                                    "status_bar_recent_remove_item_title", "string",
+                                    "com.android.systemui"));
+                            TEXT_APP_INFO_STOCK = res.getString(res.getIdentifier(
+                                    "status_bar_recent_inspect_item_title", "string",
+                                    "com.android.systemui"));
+                        } catch (Exception e) {
+                            XposedBridge.log(TAG + TAG_CLASS + "can't get the text of stock text");
+                            exceptted = true;
+                        }
+
+                        // if we have exception here
+                        // if the text is null
+                        // if the text is empty
+                        // in this condition, we all needs set the text to the
+                        // default
+                        if (exceptted || TEXT_REMOVE_FROM_LIST_STOCK == null
+                                || TEXT_APP_INFO_STOCK == null
+                                || TEXT_REMOVE_FROM_LIST_STOCK.equals("")
+                                || TEXT_APP_INFO_STOCK.equals("")) {
+                            XposedBridge.log(TAG + TAG_CLASS + "set the text to the default ");
+                            TEXT_REMOVE_FROM_LIST_STOCK = TEXT_REMOVE_FROM_LIST;
+                            TEXT_APP_INFO_STOCK = TEXT_APP_INFO;
+                        } else {
+                            Common.debugLog(TAG + TAG_CLASS + "got the text");
+                        }
+                    }
+
+                    mPopupMenu.getMenu().add(Menu.NONE, ID_REMOVE_FROM_LIST, 1,
+                            TEXT_REMOVE_FROM_LIST_STOCK);
+                    mPopupMenu.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO_STOCK);
+                } else {
+                    mPopupMenu.getMenuInflater().inflate(
+                            popupMenuId,
+                            mPopupMenu.getMenu());
+                }
+
                 // popup.getMenu().add(Menu.NONE, ID_OPEN_IN_HALO, 3,
                 // TEXT_OPEN_IN_HALO);
                 Common.debugLog(TAG + TAG_CLASS + "show the vip menu : " + pkgName);
-                popup.getMenu().add(Menu.NONE, ID_VIEW_IN_PLAY, 4, TEXT_VIEW_IN_PLAY);
+                mPopupMenu.getMenu().add(Menu.NONE, ID_VIEW_IN_PLAY, 4, TEXT_VIEW_IN_PLAY);
 
                 try {
-                    thiz.getClass().getDeclaredField("mPopup").set(thiz, popup);
+                    XposedHelpers.setObjectField(thiz, "mPopup", mPopupMenu);
+                    // thiz.getClass().getDeclaredField("mPopup").set(thiz,
+                    // popup);
                 } catch (Exception e) {
                     // User on ICS
                 }
@@ -170,52 +215,50 @@ public class RecentTaskHook {
                 final PopupMenu.OnMenuItemClickListener menu = new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         try {
-                            switch (item.getItemId()) {
-                                case ID_REMOVE_FROM_LIST:
-                                    ViewGroup recentsContainer = (ViewGroup) hookClass
-                                            .getDeclaredField("mRecentsContainer").get(thiz);
-                                    recentsContainer.removeViewInLayout(selectedView);
-                                    return true;
-                                case ID_APP_INFO:
-                                    if (viewHolder != null) {
-                                        closeRecentApps(thiz);
-                                        // Object ad = viewHolder.getClass()
-                                        // .getDeclaredField("taskDescription")
-                                        // .get(viewHolder);
-                                        // String pkg_name = (String)
-                                        // ad.getClass()
-                                        // .getDeclaredField("packageName").get(ad);
-                                        startApplicationDetailsActivity(thiz.getContext(),
-                                                getPackageName(viewHolder));
+                            int itemId = item.getItemId();
+                            if (itemId == ID_REMOVE_FROM_LIST) {
+                                ViewGroup recentsContainer = (ViewGroup) hookClass
+                                        .getDeclaredField("mRecentsContainer").get(thiz);
+                                recentsContainer.removeViewInLayout(selectedView);
+                                return true;
+                            } else if (itemId == ID_APP_INFO) {
+                                if (viewHolder != null) {
+                                    closeRecentApps(thiz);
+                                    String pkgName = getPackageName(viewHolder);
+                                    try {
+                                        Method method = thiz.getClass().getDeclaredMethod(
+                                                "startApplicationDetailsActivity", String.class);
+                                        method.setAccessible(true);
+                                        method.invoke(thiz, pkgName);
+                                    } catch (Exception e) {
+                                        XposedBridge.log(e);
+                                        // if we can't start it, use my way
+                                        startApplicationDetailsActivity(thiz.getContext(), pkgName);
                                     }
-                                    return true;
-                                    // case ID_OPEN_IN_HALO:
-                                    // if (viewHolder != null) {
-                                    // closeRecentApps(thiz);
-                                    // Object ad = viewHolder.getClass()
-                                    // .getDeclaredField("taskDescription")
-                                    // .get(viewHolder);
-                                    // Intent intent = (Intent) ad.getClass()
-                                    // .getDeclaredField("intent").get(ad);
-                                    // intent.addFlags(Common.FLAG_FLOATING_WINDOW
-                                    // | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-                                    // | Intent.FLAG_ACTIVITY_NO_USER_ACTION
-                                    // | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    // thiz.getContext().startActivity(intent);
-                                    // }
-                                    // return true;
-                                case ID_VIEW_IN_PLAY:
-                                    if (viewHolder != null) {
-                                        closeRecentApps(thiz);
-                                        // Object ad = viewHolder.getClass()
-                                        // .getDeclaredField("taskDescription")
-                                        // .get(viewHolder);
-                                        // String pkg_name = (String)
-                                        // ad.getClass()
-                                        // .getDeclaredField("packageName").get(ad);
-                                        viewInPlay(thiz.getContext(), getPackageName(viewHolder));
-                                    }
-                                    return true;
+                                }
+                                return true;
+                            }
+                            // case ID_OPEN_IN_HALO:
+                            // if (viewHolder != null) {
+                            // closeRecentApps(thiz);
+                            // Object ad = viewHolder.getClass()
+                            // .getDeclaredField("taskDescription")
+                            // .get(viewHolder);
+                            // Intent intent = (Intent) ad.getClass()
+                            // .getDeclaredField("intent").get(ad);
+                            // intent.addFlags(Common.FLAG_FLOATING_WINDOW
+                            // | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                            // | Intent.FLAG_ACTIVITY_NO_USER_ACTION
+                            // | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            // thiz.getContext().startActivity(intent);
+                            // }
+                            // return true;
+                            else if (itemId == ID_VIEW_IN_PLAY) {
+                                if (viewHolder != null) {
+                                    closeRecentApps(thiz);
+                                    viewInPlay(thiz.getContext(), getPackageName(viewHolder));
+                                }
+                                return true;
                             }
                         } catch (Throwable t) {
                             XposedBridge.log(Common.LOG_TAG + "RecentAppsHook / onMenuItemClick ("
@@ -225,35 +268,93 @@ public class RecentTaskHook {
                         return false;
                     }
                 };
-                popup.setOnMenuItemClickListener(menu);
-                popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                mPopupMenu.setOnMenuItemClickListener(menu);
+                mPopupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
                     public void onDismiss(PopupMenu menu) {
                         thumbnailView.setSelected(false);
                         try {
-                            thiz.getClass().getDeclaredField("mPopup").set(thiz, null);
+                            XposedHelpers.setObjectField(thiz, "mPopup", null);
+                            // thiz.getClass().getDeclaredField("mPopup").set(thiz,
+                            // null);
                         } catch (Exception e) {
                             // User on ICS
                         }
                     }
                 });
-                popup.show();
+                mPopupMenu.show();
                 param.setResult(null);
             }
         });
+    }
 
-        XposedBridge.hookAllMethods(hookClass, "handleOnClick", new XC_MethodHook() {
+    private static void injectTouchEvents(final LoadPackageParam lpp) {
+        XposedBridge.log(TAG + TAG_CLASS + "in inject touch eventss");
+        final Class<?> hookClass = XposedHelpers.findClass(
+                "com.android.systemui.recent.RecentsVerticalScrollView",
+                lpp.classLoader);
+        XposedBridge.hookAllMethods(hookClass, "update", new XC_MethodHook() {
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                final Object thiz = param.thisObject;
+                final ScrollView sv = (ScrollView) thiz;
+                Resources res = sv.getContext().getResources();
+
+                if (id_app_thumbnail == 0) {
+                    id_app_thumbnail = res.getIdentifier("app_thumbnail", "id",
+                            "com.android.systemui");
+                    Common.debugLog(TAG + TAG_CLASS + "identifier 2: " + id_app_thumbnail);
+                }
+
+                LinearLayout mLinearLayout = null;
+                try {
+                    mLinearLayout = (LinearLayout) thiz.getClass()
+                            .getDeclaredField("mLinearLayout").get(thiz);
+                } catch (Exception e) {
+                    XposedBridge
+                            .log(TAG + TAG_CLASS
+                                    + "Exception in linear layout, can't find mLinearLayout");
+                }
+                if (mLinearLayout != null) {
+                    XposedBridge.log(TAG + TAG_CLASS + "in inject touch events, OK");
+                    if (sTouchListener == null) {
+                        XposedBridge.log(TAG + TAG_CLASS + "new a touch listener");
+                        sTouchListener = new RecentsOnTouchLis();
+                    }
+                    FrameLayout frameLayout;
+                    for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+                        Common.debugLog(TAG + TAG_CLASS + "order = " + i);
+                        frameLayout = (FrameLayout) mLinearLayout.getChildAt(i);
+                        // frameLayout.setOnTouchListener(sTouchListener);
+                        // set the touch listener to at the thumb nail, so we
+                        // can get finger count
+                        frameLayout.findViewById(id_app_thumbnail).setOnTouchListener(
+                                sTouchListener);
+                    }
+                } else {
+                    XposedBridge.log(TAG + TAG_CLASS
+                            + "in inject touch events, can't get linearLayout");
+                }
+            }
+        });
+
+        // different class injection
+        final Class<?> panelViewHookClass = XposedHelpers.findClass(
+                "com.android.systemui.recent.RecentsPanelView",
+                lpp.classLoader);
+        XposedBridge.hookAllMethods(panelViewHookClass, "handleOnClick", new XC_MethodHook() {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 // the touch listener is null??? any way, return
                 if (sTouchListener == null) {
+                    XposedBridge.log(TAG + TAG_CLASS + "EEROR, the touch listener is null");
                     return;
                 }
                 // not the two finger click action, return
                 if (!sTouchListener.twoFingerClick) {
+                    XposedBridge.log(TAG + TAG_CLASS + "not two finger tap");
                     return;
                 }
                 sTouchListener.twoFingerClick = false;
 
-                XposedBridge.log(TAG + TAG_CLASS + "playing in the onClick");
+                XposedBridge.log(TAG + TAG_CLASS + "playing in the two finger tap onClick");
 
                 final View thiz = (View) param.thisObject;
                 final View selectedView = (View) param.args[0];
@@ -285,61 +386,12 @@ public class RecentTaskHook {
         });
     }
 
-    private static void injectTouchEvents(final LoadPackageParam lpp) {
-        XposedBridge.log(TAG + TAG_CLASS + "in inject touch eventss");
-        final Class<?> hookClass = XposedHelpers.findClass(
-                "com.android.systemui.recent.RecentsVerticalScrollView",
-                lpp.classLoader);
-        XposedBridge.hookAllMethods(hookClass, "update", new XC_MethodHook() {
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                final Object thiz = param.thisObject;
-                final ScrollView sv = (ScrollView) thiz;
-                Resources res = sv.getContext().getResources();
-
-                if (id_app_thumbnail == -1) {
-                    id_app_thumbnail = res.getIdentifier("app_thumbnail", "id",
-                            "com.android.systemui");
-                    Common.debugLog(TAG + TAG_CLASS + "identifier 2: " + id_app_thumbnail);
-                }
-
-                LinearLayout mLinearLayout = null;
-                try {
-                    mLinearLayout = (LinearLayout) thiz.getClass()
-                            .getDeclaredField("mLinearLayout").get(thiz);
-                } catch (Exception e) {
-                    XposedBridge
-                            .log(TAG + TAG_CLASS
-                                    + "Exception in linear layout, can't find mLinearLayout");
-                }
-                if (mLinearLayout != null) {
-                    XposedBridge.log(TAG + TAG_CLASS + "in inject touch events, OK");
-                    if (sTouchListener == null) {
-                        sTouchListener = new RecentsOnTouchLis();
-                    }
-                    FrameLayout frameLayout;
-                    for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
-                        Common.debugLog(TAG + TAG_CLASS + "order = " + i);
-                        frameLayout = (FrameLayout) mLinearLayout.getChildAt(i);
-                        // frameLayout.setOnTouchListener(sTouchListener);
-                        // set the touch listener to at the thumb nail, so we
-                        // can get finger count
-                        frameLayout.findViewById(id_app_thumbnail).setOnTouchListener(
-                                sTouchListener);
-                    }
-                } else {
-                    XposedBridge.log(TAG + TAG_CLASS
-                            + "in inject touch events, can't get linearLayout");
-                }
-            }
-        });
-    }
-
     private static class RecentsOnTouchLis implements View.OnTouchListener {
         public boolean twoFingerClick;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            XposedBridge.log(TAG + TAG_CLASS + "on touch, v : " + v + ", events : " + event);
+            Common.debugLog(TAG + TAG_CLASS + "on touch, v : " + v + ", events : " + event);
             Common.debugLog(TAG + TAG_CLASS + "events, action : " + event.getAction());
             Common.debugLog(TAG + TAG_CLASS + "events, pointer count : " + event.getPointerCount());
             if (event.getPointerCount() == 2) {
@@ -348,7 +400,7 @@ public class RecentTaskHook {
                     twoFingerClick = true;
                     Common.debugLog(TAG + TAG_CLASS + "events, pointer DOWN");
                     XposedBridge
-                            .log(TAG + TAG_CLASS + "events, TWO ON");
+                            .log(TAG + TAG_CLASS + "events, TWO ON, e: " + event);
                 }
             } else {
                 // don't set it
@@ -360,20 +412,13 @@ public class RecentTaskHook {
     }
 
     private static void closeRecentApps(View thiz) {
-        if (Build.VERSION.SDK_INT >= 16) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             try {
                 XposedHelpers.callMethod(thiz, "dismissAndGoBack");
                 return;
             } catch (Exception e) {
             }
         }
-
-        // those is for the sdk version lower than 16
-        /*
-         * StatusBarManager bar = (StatusBarManager)
-         * thiz.getContext().getSystemService("statusbar"); if (bar != null) {
-         * try { bar.collapse(); return; } catch (Throwable e) { } }
-         */
 
         new Thread() {
             @Override
@@ -386,7 +431,9 @@ public class RecentTaskHook {
         }.start();
     }
 
-    private static void startApplicationDetailsActivity(Context ctx, String packageName) {
+    // we use this method in the Status bar hook
+    /* private */static void startApplicationDetailsActivity(Context ctx, String packageName) {
+        XposedBridge.log(TAG + TAG_CLASS + "start application details use my way");
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts(
                 "package", packageName, null));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -427,6 +474,9 @@ public class RecentTaskHook {
             return false;
         if (pkgNameInner.startsWith("com.android"))
             return true;
+        // this is for the notification package name
+        if (pkgNameInner.equals("android"))
+            return true;
         return false;
     }
 
@@ -450,10 +500,10 @@ public class RecentTaskHook {
 
     private static void checkPlay(Context ctx, Intent intent) {
         List<ResolveInfo> list = ctx.getPackageManager().queryIntentActivities(intent, 0);
-        XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay:" + XposedInit.directlyShowInPlay);
+        XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay in check play : " + XposedInit.directlyShowInPlay);
         if (XposedInit.directlyShowInPlay) {
             String pkgName;
-            Common.debugLog(TAG + TAG_CLASS + "size:" + list.size());
+            XposedBridge.log(TAG + TAG_CLASS + "size:" + list.size());
             for (int i = 0; i < list.size(); i++) {
                 ActivityInfo info = list.get(i).activityInfo;
                 Common.debugLog(TAG + TAG_CLASS + "the package name is " + info.packageName);

@@ -16,9 +16,9 @@
     <string name="pref_title_show_in_app_info">Zobraziť na obrazovke Informácie o aplikácii</string>
     <string name="pref_summary_show_in_app_info_on">"Možnosť 'Zobraziť v Obchode' bude zobrazená na obrazovke Informácie o aplikáciithe"</string>
     <string name="pref_summary_show_in_app_info_off"></string>
-    <string name="pref_title_double_in_recent_panel">Klik dvomi prstami</string>
-    <string name="pref_summary_double_in_recent_panel_on">"Kliknite dvomi prstami na zobrazenú aplikáciu v panely nedávnych aplikácií pre zobrazenie v Obchode Play"</string>
-    <string name="pref_summary_double_in_recent_panel_off"></string>
+    <string name="pref_title_two_finger_in_recent_panel">Klik dvomi prstami</string>
+    <string name="pref_summary_two_finger_in_recent_panel_on">"Kliknite dvomi prstami na zobrazenú aplikáciu v panely nedávnych aplikácií pre zobrazenie v Obchode Play"</string>
+    <string name="pref_summary_two_finger_in_recent_panel_off"></string>
     <string name="pref_title_directly_view_in_play">Otvoriť priamo v Obchode Google Play</string>
     <string name="pref_summary_directly_view_in_play_on">Otvorí priamo v Obchode Google Play, nezobrazí možnosť Dokončiť akciu pomocou aplikácie</string>
     <string name="pref_summary_directly_view_in_play_off">Zobrazí Dokončiť akciu pomocou aplikácie</string>

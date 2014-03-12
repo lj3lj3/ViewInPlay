@@ -10,16 +10,22 @@
         android:title="@string/pref_title_show_in_recent_panel" />
     <CheckBoxPreference
         android:defaultValue="false"
+        android:key="@string/key_two_finger_in_recent_panel"
+        android:summaryOff="@string/pref_summary_two_finger_in_recent_panel_off"
+        android:summaryOn="@string/pref_summary_two_finger_in_recent_panel_on"
+        android:title="@string/pref_title_two_finger_in_recent_panel" />
+    <CheckBoxPreference
+        android:defaultValue="false"
         android:key="@string/key_show_in_app_info"
         android:summaryOff="@string/pref_summary_show_in_app_info_off"
         android:summaryOn="@string/pref_summary_show_in_app_info_on"
         android:title="@string/pref_title_show_in_app_info" />
     <CheckBoxPreference
         android:defaultValue="false"
-        android:key="@string/key_double_in_recent_panel"
-        android:summaryOff="@string/pref_summary_double_in_recent_panel_off"
-        android:summaryOn="@string/pref_summary_double_in_recent_panel_on"
-        android:title="@string/pref_title_double_in_recent_panel" />
+        android:key="@string/key_show_in_notification"
+        android:summaryOff="@string/pref_summary_show_in_notification_off"
+        android:summaryOn="@string/pref_summary_show_in_notification_on"
+        android:title="@string/pref_title_show_in_notification" />
 
     <PreferenceCategory android:title="@string/pref_title_extra" >
         <CheckBoxPreference
