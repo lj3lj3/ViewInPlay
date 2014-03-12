@@ -3,32 +3,32 @@
     <string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="xposed_description">"Dieses Modul fügt dem Letzte-Apps-Kontextmenü und  der App-Info-Ansicht eine 'In Play anzeigen'-Option hinzu"</string>
+    <string name="xposed_description">"Dieses Modul fügt dem Task-Manager und der App-Info-Ansicht eine 'In Play anzeigen'-Option hinzu"</string>
 
     <string name="recents_remove_from_list">Aus Liste entfernen</string>
     <string name="recents_app_info">@string/notif_app_info</string>
     <string name="notif_app_info">App-Info</string>
     <string name="view_in_play">In Play anzeigen</string>
 
-    <string name="pref_title_show_in_recent_panel">Im Letzte-Apps-Kontextmenü anzeigen</string>
-    <string name="pref_summary_show_in_recent_panel_on">"Das 'In Play anzeigen'-Menü wird im Kontextmenü (Lange klicken) der Letzte-App-Ansicht angezeigt"</string>
+    <string name="pref_title_show_in_recent_panel">Im Task-Manager anzeigen</string>
+    <string name="pref_summary_show_in_recent_panel_on">"Das 'In Play anzeigen'-Menü wird im Task-Manager (Lange klicken) angezeigt"</string>
     <string name="pref_summary_show_in_recent_panel_off"></string>
     <string name="pref_title_show_in_app_info">In App-Info-Ansicht anzeigen</string>
     <string name="pref_summary_show_in_app_info_on">"Das 'In Play anzeigen'-Menü wird in der App-Info-Ansicht angezeigt"</string>
     <string name="pref_summary_show_in_app_info_off"></string>
     <string name="pref_title_directly_view_in_play">Direkt im Play Store anzeigen</string>
     <string name="pref_summary_directly_view_in_play_on">Direkt im Play Store anzeigen, ohne die App-Auswahl anzuzeigen</string>
-    <string name="pref_summary_directly_view_in_play_off">Zeigt die App-Auswahl an, um eine bestimmt App auszuwählen</string>
+    <string name="pref_summary_directly_view_in_play_off">Zeigt die App-Auswahl an, um eine bestimmte App auszuwählen</string>
     <string name="pref_title_note">Anmerkung</string>
     <!-- this may be edited often -->
-    <string name="pref_summary_note">Nach Änderung oder Upgrade bitte das Gerät neustarten</string>
-    <string name="pref_title_xda">XDA thread</string>
-    <string name="pref_summary_xda">Klicken um den XDA-Thread des ViewInPlay-Modules zu besuchen</string>
+    <string name="pref_summary_note">Nach Änderung oder Updade bitte das Gerät neustarten</string>
+    <string name="pref_title_xda">XDA Thread</string>
+    <string name="pref_summary_xda">Klicken um den XDA-Thread des ViewInPlay-Moduls zu besuchen</string>
     <string name="pref_title_about">Über</string>
     <string name="pref_title_hide_icon">Icon in der App-Übersicht ausblenden</string>
-    <string name="pref_summary_hide_icon_on">"Das App-Symbol kann nicht wieder eingeblendet werden, oh die App neu zu installieren. Einstellungen sind noch in der Modulliste des Xposed-Installers zu finden."</string>
+    <string name="pref_summary_hide_icon_on">"Das App-Symbol kann nicht wieder eingeblendet werden, ohne die App neu zu installieren. Einstellungen sind noch in der Modulliste des Xposed Installers zu finden."</string>
     <string name="pref_summary_hide_icon_off">Auswählen, um das App-Symbol aus der App-Übersicht auszublenden</string>
-    <string name="pref_summary_hide_icon_not_from_launcher">Diese Checkbox kann nur direkt vom Launcher aus geschaltet werden</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">Diese Checkbox kann nur direkt vom Launcher ausgeschaltet werden</string>
     <string name="pref_title_extra">Extras</string>
     
     <string name="no_play_on_the_phone">Oh - kein Google Play Store??? Falls du dir sicher bist, dass du ihn doch hast, kontaktiere mich bitte :)</string>
