@@ -19,10 +19,14 @@
     <string name="pref_title_two_finger_in_recent_panel">Klik dvomi prstami</string>
     <string name="pref_summary_two_finger_in_recent_panel_on">"Kliknite dvomi prstami na zobrazenú aplikáciu v panely nedávnych aplikácií pre zobrazenie v Obchode Play"</string>
     <string name="pref_summary_two_finger_in_recent_panel_off"></string>
+    <string name="pref_title_show_in_notification">Zobraziť v oznámeniach</string>
+    <string name="pref_summary_show_in_notification_on">"Možnosť 'Zobraziť v Obchode' bude zobrazená v kontextovej ponuke oznámenia"</string>
+    <string name="pref_summary_show_in_notification_off">"Možnosť 'Zobraziť v Obchode' bude zobrazená v kontextovej ponuke oznámenia"</string>
     <string name="pref_title_directly_view_in_play">Otvoriť priamo v Obchode Google Play</string>
     <string name="pref_summary_directly_view_in_play_on">Otvorí priamo v Obchode Google Play, nezobrazí možnosť Dokončiť akciu pomocou aplikácie</string>
     <string name="pref_summary_directly_view_in_play_off">Zobrazí Dokončiť akciu pomocou aplikácie</string>
     <string name="pref_title_note">Poznámka</string>
+    <!-- this may be edited often -->
     <string name="pref_summary_note">Po zmene prosím reštartujte zariadenie</string>
     <string name="pref_title_xda">XDA fórum</string>
     <string name="pref_summary_xda">Kliknite pre zobrazenie modulu ViewInPlay na fóre XDA</string>
