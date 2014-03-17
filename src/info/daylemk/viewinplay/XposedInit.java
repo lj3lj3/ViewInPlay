@@ -26,6 +26,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     static String KEY_SHOW_IN_RECENT_PANEL;
     static String KEY_SHOW_IN_NOTIFICATION;
     static String KEY_TWO_FINGER_IN_RECENT_PANEL;
+    static String KEY_COMPAT_XHALO;
     static boolean directlyShowInPlay = false;
 
     private static List<String> notStockApp;
@@ -51,6 +52,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         KEY_SHOW_IN_APP_INFO = sModRes.getString(R.string.key_show_in_app_info);
         KEY_SHOW_IN_NOTIFICATION = sModRes.getString(R.string.key_show_in_notification);
         KEY_TWO_FINGER_IN_RECENT_PANEL = sModRes.getString(R.string.key_two_finger_in_recent_panel);
+        KEY_COMPAT_XHALO = sModRes.getString(R.string.key_compat_xhalo);
         notStockApp = Arrays.asList(sModRes.getStringArray(R.array.not_stock_app));
         stockAndroidApp = Arrays.asList(sModRes.getStringArray(R.array.stock_android_app));
     }

@@ -10,6 +10,7 @@
 
     <string name="recents_remove_from_list">Remove from list</string>
     <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="recents_open_halo">Open in halo</string>
     <string name="notif_app_info">App info</string>
     <string name="view_in_play">View in Play</string>
 
@@ -19,6 +20,7 @@
     <string name="key_two_finger_in_recent_panel">double_in_recent_panel</string>
     <string name="key_show_in_notification">show_in_notification</string>
     <string name="key_directly_show_in_play">directly_show_in_play</string>
+    <string name="key_compat_xhalo">compat_xhalo</string>
     <string name="key_pref_layout">key_pref_layout</string>
     <string name="key_hide_icon">hide_icon</string>
     <!-- delete these lines in your language file __end -->
@@ -38,6 +40,9 @@
     <string name="pref_title_directly_view_in_play">Directly view in the Play Store</string>
     <string name="pref_summary_directly_view_in_play_on">directly view in the Play Store, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
+    <string name="pref_title_compatibility">Compatibility</string>
+    <string name="pref_title_compat_xhalo">XHaloWindow</string>
+    <string name="pref_summary_compat_xhalo">XHaloWindow</string>
     <string name="pref_title_note">Note</string>
     <!-- this may be edited often -->
     <string name="pref_summary_note">After change or upgrade, Please reboot your phone</string>
@@ -53,4 +58,5 @@
     <string name="no_play_on_the_phone">oh~ no Google Play Store??? if you sure you have it, please contact me :)</string>
     <string name="stock_app">"Sorry~ this is stock app, can't show in the Play Store."</string>
     <string name="notice_hide_icon">"Are you sure? once hide, can't bring it back unless reinstall the app for now"</string>
+    <!-- <string name="cant_open_in_xhalo">"Sorry, can't launch it. make sure you have XHaloWindow, and actived it :)"</string> -->
 </resources>

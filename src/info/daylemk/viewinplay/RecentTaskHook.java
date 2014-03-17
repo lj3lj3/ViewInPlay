@@ -42,20 +42,26 @@ public class RecentTaskHook {
     static String TEXT_APP_INFO;
     // the string of the app info read from android
     static String TEXT_APP_INFO_STOCK = null;
-    // static String TEXT_OPEN_IN_HALO;
+    // re-open it
+    static String TEXT_OPEN_IN_XHALO;
     static String TEXT_REMOVE_FROM_LIST;
     // the string of remove from list read from android
     static String TEXT_REMOVE_FROM_LIST_STOCK = null;
     static String TEXT_VIEW_IN_PLAY;
     static String TEXT_NO_PLAY;
     static String TEXT_STOCK_APP;
+//    static String TEXT_CANT_OPEN_IN_XHALO;
 
     static int ID_REMOVE_FROM_LIST = 1000;
     static int ID_APP_INFO = 2000;
-    // static final int ID_OPEN_IN_HALO = 3000;
+    // re-open it
+    static final int ID_OPEN_IN_XHALO = 3000;
     static final int ID_VIEW_IN_PLAY = 4000;
 
     private static RecentsOnTouchLis sTouchListener;
+
+    private static boolean bool_compat_xhalo = false;
+
     // 0 is a better choice
     private static int id_app_thumbnail = 0;
     private static int popupMenuId = 0;
@@ -65,11 +71,13 @@ public class RecentTaskHook {
 
     public static void initZygote(XModuleResources module_res) {
         TEXT_APP_INFO = module_res.getString(R.string.recents_app_info);
-        // TEXT_OPEN_IN_HALO = module_res.getString(R.string.recents_open_halo);
+        // re-open it
+        TEXT_OPEN_IN_XHALO = module_res.getString(R.string.recents_open_halo);
         TEXT_REMOVE_FROM_LIST = module_res.getString(R.string.recents_remove_from_list);
         TEXT_VIEW_IN_PLAY = module_res.getString(R.string.view_in_play);
         TEXT_NO_PLAY = module_res.getString(R.string.no_play_on_the_phone);
         TEXT_STOCK_APP = module_res.getString(R.string.stock_app);
+//        TEXT_CANT_OPEN_IN_XHALO = module_res.getString(R.string.cant_open_in_xhalo);
     }
 
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
@@ -95,6 +103,9 @@ public class RecentTaskHook {
                 Common.DEFAULT_TWO_FINGER_IN_RECENT_PANEL)) {
             injectTouchEvents(lpp);
         }
+
+        bool_compat_xhalo = pref.getBoolean(XposedInit.KEY_COMPAT_XHALO,
+                Common.DEFAULT_COMPAT_XHALO);
 
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_RECENT_PANEL,
                 Common.DEFAULT_SHOW_IN_RECENT_PANEL)) {
@@ -199,8 +210,13 @@ public class RecentTaskHook {
                             mPopupMenu.getMenu());
                 }
 
-                // popup.getMenu().add(Menu.NONE, ID_OPEN_IN_HALO, 3,
-                // TEXT_OPEN_IN_HALO);
+                // if the xhalo compatibility is on, add that menu
+                if (bool_compat_xhalo) {
+                    XposedBridge.log(TAG + TAG_CLASS + "the xhalo compatibility");
+                    // re-open it
+                    mPopupMenu.getMenu().add(Menu.NONE, ID_OPEN_IN_XHALO, 3,
+                            TEXT_OPEN_IN_XHALO);
+                }
                 Common.debugLog(TAG + TAG_CLASS + "show the vip menu : " + pkgName);
                 mPopupMenu.getMenu().add(Menu.NONE, ID_VIEW_IN_PLAY, 4, TEXT_VIEW_IN_PLAY);
 
@@ -214,8 +230,9 @@ public class RecentTaskHook {
 
                 final PopupMenu.OnMenuItemClickListener menu = new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
+                        int itemId = item.getItemId();
+                        XposedBridge.log(TAG + TAG_CLASS + "item clicked : " + itemId);
                         try {
-                            int itemId = item.getItemId();
                             if (itemId == ID_REMOVE_FROM_LIST) {
                                 ViewGroup recentsContainer = (ViewGroup) hookClass
                                         .getDeclaredField("mRecentsContainer").get(thiz);
@@ -237,23 +254,22 @@ public class RecentTaskHook {
                                     }
                                 }
                                 return true;
-                            }
-                            // case ID_OPEN_IN_HALO:
-                            // if (viewHolder != null) {
-                            // closeRecentApps(thiz);
-                            // Object ad = viewHolder.getClass()
-                            // .getDeclaredField("taskDescription")
-                            // .get(viewHolder);
-                            // Intent intent = (Intent) ad.getClass()
-                            // .getDeclaredField("intent").get(ad);
-                            // intent.addFlags(Common.FLAG_FLOATING_WINDOW
-                            // | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-                            // | Intent.FLAG_ACTIVITY_NO_USER_ACTION
-                            // | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            // thiz.getContext().startActivity(intent);
-                            // }
-                            // return true;
-                            else if (itemId == ID_VIEW_IN_PLAY) {
+                            } else if (itemId == ID_OPEN_IN_XHALO) {
+                                if (viewHolder != null) {
+                                    closeRecentApps(thiz);
+                                    Object ad = viewHolder.getClass()
+                                            .getDeclaredField("taskDescription")
+                                            .get(viewHolder);
+                                    Intent intent = (Intent) ad.getClass()
+                                            .getDeclaredField("intent").get(ad);
+                                    intent.addFlags(Common.FLAG_FLOATING_WINDOW
+                                            | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                                            | Intent.FLAG_ACTIVITY_NO_USER_ACTION
+                                            | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    thiz.getContext().startActivity(intent);
+                                }
+                                return true;
+                            } else if (itemId == ID_VIEW_IN_PLAY) {
                                 if (viewHolder != null) {
                                     closeRecentApps(thiz);
                                     viewInPlay(thiz.getContext(), getPackageName(viewHolder));
@@ -261,8 +277,6 @@ public class RecentTaskHook {
                                 return true;
                             }
                         } catch (Throwable t) {
-                            XposedBridge.log(Common.LOG_TAG + "RecentAppsHook / onMenuItemClick ("
-                                    + item.getItemId() + ")");
                             XposedBridge.log(t);
                         }
                         return false;
@@ -500,7 +514,8 @@ public class RecentTaskHook {
 
     private static void checkPlay(Context ctx, Intent intent) {
         List<ResolveInfo> list = ctx.getPackageManager().queryIntentActivities(intent, 0);
-        XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay in check play : " + XposedInit.directlyShowInPlay);
+        XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay in check play : "
+                + XposedInit.directlyShowInPlay);
         if (XposedInit.directlyShowInPlay) {
             String pkgName;
             XposedBridge.log(TAG + TAG_CLASS + "size:" + list.size());
