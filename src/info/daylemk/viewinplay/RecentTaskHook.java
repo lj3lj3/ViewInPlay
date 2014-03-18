@@ -50,7 +50,7 @@ public class RecentTaskHook {
     static String TEXT_VIEW_IN_PLAY;
     static String TEXT_NO_PLAY;
     static String TEXT_STOCK_APP;
-//    static String TEXT_CANT_OPEN_IN_XHALO;
+    // static String TEXT_CANT_OPEN_IN_XHALO;
 
     static int ID_REMOVE_FROM_LIST = 1000;
     static int ID_APP_INFO = 2000;
@@ -77,7 +77,8 @@ public class RecentTaskHook {
         TEXT_VIEW_IN_PLAY = module_res.getString(R.string.view_in_play);
         TEXT_NO_PLAY = module_res.getString(R.string.no_play_on_the_phone);
         TEXT_STOCK_APP = module_res.getString(R.string.stock_app);
-//        TEXT_CANT_OPEN_IN_XHALO = module_res.getString(R.string.cant_open_in_xhalo);
+        // TEXT_CANT_OPEN_IN_XHALO =
+        // module_res.getString(R.string.cant_open_in_xhalo);
     }
 
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
@@ -277,6 +278,7 @@ public class RecentTaskHook {
                                 return true;
                             }
                         } catch (Throwable t) {
+                            XposedBridge.log(Common.LOG_TAG);
                             XposedBridge.log(t);
                         }
                         return false;
@@ -428,9 +430,12 @@ public class RecentTaskHook {
     private static void closeRecentApps(View thiz) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             try {
-                XposedHelpers.callMethod(thiz, "dismissAndGoBack");
+                // DO NOT use callMethod, it wouldn't catch anything here
+                thiz.getClass().getDeclaredMethod("dismissAndGoBack").invoke(thiz);
+                //XposedHelpers.callMethod(thiz, "dismissAndGoBack");
                 return;
             } catch (Exception e) {
+                XposedBridge.log(e);
             }
         }
 
@@ -440,6 +445,7 @@ public class RecentTaskHook {
                 try {
                     Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_BACK);
                 } catch (Exception e) {
+                    XposedBridge.log(e);
                 }
             }
         }.start();

@@ -14,6 +14,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class StatusBarHook {
@@ -137,27 +138,30 @@ public class StatusBarHook {
 
     /**
      * this should worked with 4.1 and newer
+     * 
      * @param thiz
      */
     private static void collapsePanels(Object thiz) {
+        Method collapsePanel;
         try {
             // 4.2 and newer
-            XposedHelpers.callMethod(
-                    thiz,
-                    "animateCollapsePanels",
-                    // can't get it, wired
-                    // :(
-                    // CommandQueue.FLAG_EXCLUDE_NONE
-                    0
-                    );
+            collapsePanel = XposedHelpers.findMethodBestMatch(thiz.getClass(), "animateCollapsePanels", Integer.class);
+            collapsePanel.setAccessible(true);
+            // can't get it, wired
+            // :(
+            // CommandQueue.FLAG_EXCLUDE_NONE
+            collapsePanel.invoke(thiz, 0);
         } catch (Exception e) {
+            XposedBridge.log(e);
             // 4.1
-            XposedHelpers.callMethod(
-                    thiz,
-                    "animateCollapse",
-                    // CommandQueue.FLAG_EXCLUDE_NONE
-                    0
-                    );
+            try {
+//                collapsePanel = thiz.getClass().getDeclaredMethod("animateCollapse", Integer.class);
+                collapsePanel = XposedHelpers.findMethodBestMatch(thiz.getClass(), "animateCollapse", Integer.class);
+                collapsePanel.setAccessible(true);
+                collapsePanel.invoke(thiz, 0);
+            } catch (Exception e1) {
+                XposedBridge.log(e1);
+            }
         }
     }
 }
