@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+<!-- Ein Android Task-Manager, wie Samsung ihn lange Zeit angeboten hat (und es vielleicht immer noch tut, hab lange kein Touchwiz mehr gesehen), ist etwas anderes als die Recent-Apps (zu Deutsch: zuletzt geöffnete Apps, kurz letzte Apps -->
     <string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="xposed_description">"Dieses Modul fügt dem Task-Manager und der App-Info-Ansicht eine 'In Play anzeigen'-Option hinzu"</string>
+    <string name="xposed_description">"Dieses Modul fügt dem Kontextmenü der Letzte-App-Ansicht und der App-Info-Ansicht eine 'In Play anzeigen'-Option hinzu"</string>
 
     <string name="recents_remove_from_list">Aus Liste entfernen</string>
     <string name="recents_app_info">@string/notif_app_info</string>
     <string name="notif_app_info">App-Info</string>
     <string name="view_in_play">In Play anzeigen</string>
 
-    <string name="pref_title_show_in_recent_panel">Im Task-Manager anzeigen</string>
-    <string name="pref_summary_show_in_recent_panel_on">"Das 'In Play anzeigen'-Menü wird im Task-Manager (Lange klicken) angezeigt"</string>
-    <string name="pref_summary_show_in_recent_panel_off"></string>
+    <string name="pref_title_show_in_recent_panel">In Letzte-Apps anzeigen</string>
+    <string name="pref_summary_show_in_recent_panel_on">"Das 'In Play anzeigen'-Menü wird in der Letzte-Apps-Ansicht (lange klicken) angezeigt"</string>
+    <string name="pref_summary_show_in_recent_panel_off">"Nach dem Aktivieren dieser Option wird ein 'In Play anzeigen'-Menü in der Letzte-App-Ansicht (lange klicken) angezeit"</string>
     <string name="pref_title_show_in_app_info">In App-Info-Ansicht anzeigen</string>
-    <string name="pref_summary_show_in_app_info_on">"Das 'In Play anzeigen'-Menü wird in der App-Info-Ansicht angezeigt"</string>
-    <string name="pref_summary_show_in_app_info_off"></string>
+    <string name="pref_summary_show_in_app_info_on">"Das 'In Play anzeigen'-Knopf wird in der App-Info-Ansicht angezeigt"</string>
+    <string name="pref_summary_show_in_app_info_off">Nach dem Aktivieren dieser Option wird ein 'In Play anzeigen'-Knopf in der App-Info-Ansicht angezeit</string>
+    <string name="pref_title_two_finger_in_recent_panel">Zwei-Finger zum Play Store</string>
+    <string name="pref_summary_two_finger_in_recent_panel_on">"Nutze einen Zwei-Finger-Klick auf das Vorschaubild einer App in der Letzte-Apps-Ansicht, um diese im Play Store anzuzeigen"</string>
+    <string name="pref_summary_two_finger_in_recent_panel_off">"Nach dem Aktivieren dieser Option ist es möglich eine App im Play Store anzuzeigen, indem mit zwei Fingern auf ihr Vorschaubild in der Letzte-Apps-Ansicht geklickt wird"</string>
+    <string name="pref_title_show_in_notification">Bei Benachrichtigungen anzeigen</string>
+    <string name="pref_summary_show_in_notification_on">"Das 'In Play anzeigen'-Menü wird im Kontextmenü (lange klicken) von Benachrichtigungen angezeigt"</string>
+    <string name="pref_summary_show_in_notification_off">"Nach dem Aktivieren dieser Option wird das 'In Play anzeigen'-Menü im Kontextmenü (lange klicken) von Benachrichtigungen angezeigt"</string>
     <string name="pref_title_directly_view_in_play">Direkt im Play Store anzeigen</string>
     <string name="pref_summary_directly_view_in_play_on">Direkt im Play Store anzeigen, ohne die App-Auswahl anzuzeigen</string>
     <string name="pref_summary_directly_view_in_play_off">Zeigt die App-Auswahl an, um eine bestimmte App auszuwählen</string>
     <string name="pref_title_note">Anmerkung</string>
     <!-- this may be edited often -->
-    <string name="pref_summary_note">Nach Änderung oder Updade bitte das Gerät neustarten</string>
+    <string name="pref_summary_note">Nach Änderung oder Update bitte das Gerät neustarten</string>
     <string name="pref_title_xda">XDA Thread</string>
     <string name="pref_summary_xda">Klicken um den XDA-Thread des ViewInPlay-Moduls zu besuchen</string>
     <string name="pref_title_about">Über</string>
     <string name="pref_title_hide_icon">Icon in der App-Übersicht ausblenden</string>
     <string name="pref_summary_hide_icon_on">"Das App-Symbol kann nicht wieder eingeblendet werden, ohne die App neu zu installieren. Einstellungen sind noch in der Modulliste des Xposed Installers zu finden."</string>
     <string name="pref_summary_hide_icon_off">Auswählen, um das App-Symbol aus der App-Übersicht auszublenden</string>
-    <string name="pref_summary_hide_icon_not_from_launcher">Diese Checkbox kann nur direkt vom Launcher ausgeschaltet werden</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">Diese Checkbox kann nur direkt vom Launcher aus geschaltet werden</string>
+	<!-- Es ist vom Launcher aus schalten gemeint, nicht vom Launcher ausschalten -->
     <string name="pref_title_extra">Extras</string>
     
     <string name="no_play_on_the_phone">Oh - kein Google Play Store??? Falls du dir sicher bist, dass du ihn doch hast, kontaktiere mich bitte :)</string>
+    <string name="stock_app">"Entschuldige - dies ist eine vorinstallierte App, die nicht im Play Store angezeigt werden kann."</string>
     <string name="notice_hide_icon">"Bist du sicher? Einmal versteckt kann das Symbol bis jetzt nur durch Neuinstallation zurückgebracht werden"</string>
 </resources>
