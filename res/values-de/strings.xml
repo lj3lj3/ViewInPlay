@@ -17,7 +17,7 @@
     <string name="pref_summary_show_in_recent_panel_off">"Nach dem Aktivieren dieser Option wird ein 'In Play anzeigen'-Menü in der Letzte-App-Ansicht (lange klicken) angezeit"</string>
     <string name="pref_title_show_in_app_info">In App-Info-Ansicht anzeigen</string>
     <string name="pref_summary_show_in_app_info_on">"Das 'In Play anzeigen'-Knopf wird in der App-Info-Ansicht angezeigt"</string>
-    <string name="pref_summary_show_in_app_info_off">Nach dem Aktivieren dieser Option wird ein 'In Play anzeigen'-Knopf in der App-Info-Ansicht angezeit</string>
+    <string name="pref_summary_show_in_app_info_off">"Nach dem Aktivieren dieser Option wird ein 'In Play anzeigen'-Knopf in der App-Info-Ansicht angezeit"</string>
     <string name="pref_title_two_finger_in_recent_panel">Zwei-Finger zum Play Store</string>
     <string name="pref_summary_two_finger_in_recent_panel_on">"Nutze einen Zwei-Finger-Klick auf das Vorschaubild einer App in der Letzte-Apps-Ansicht, um diese im Play Store anzuzeigen"</string>
     <string name="pref_summary_two_finger_in_recent_panel_off">"Nach dem Aktivieren dieser Option ist es möglich eine App im Play Store anzuzeigen, indem mit zwei Fingern auf ihr Vorschaubild in der Letzte-Apps-Ansicht geklickt wird"</string>
