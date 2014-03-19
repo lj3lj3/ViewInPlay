@@ -11,7 +11,6 @@ import android.content.res.XModuleResources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -428,18 +427,22 @@ public class RecentTaskHook {
     }
 
     private static void closeRecentApps(View thiz) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        // > 4.1
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            XposedBridge.log(TAG + TAG_CLASS + "call show, >4.1");
             try {
                 // DO NOT use callMethod, it wouldn't catch anything here
-                thiz.getClass().getDeclaredMethod("dismissAndGoBack").invoke(thiz);
+                thiz.getClass().getDeclaredMethod("show", boolean.class).invoke(thiz, false);
                 //XposedHelpers.callMethod(thiz, "dismissAndGoBack");
                 return;
             } catch (Exception e) {
                 XposedBridge.log(e);
             }
         }
+        // 4.1
+        StatusBarHook.collapseStatusBarPanel();
 
-        new Thread() {
+        /*new Thread() {
             @Override
             public void run() {
                 try {
@@ -448,7 +451,7 @@ public class RecentTaskHook {
                     XposedBridge.log(e);
                 }
             }
-        }.start();
+        }.start();*/
     }
 
     // we use this method in the Status bar hook

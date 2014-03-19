@@ -3,6 +3,7 @@ package info.daylemk.viewinplay;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,6 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class StatusBarHook {
@@ -23,6 +23,7 @@ public class StatusBarHook {
 
     private static int popupMenuId = 0;
     private static int inspectItemId = 0;
+    private static Object statusBar;
 
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
         if (!lpp.packageName.equals("com.android.systemui"))
@@ -30,10 +31,40 @@ public class StatusBarHook {
         XposedBridge.log(TAG + TAG_CLASS + "handle package");
         pref.reload();
 
+        injectStatusBarCollapse(lpp);
+
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_NOTIFICATION,
                 Common.DEFAULT_SHOW_IN_NOTIFICATION)) {
             injectStatusBarMenu(lpp);
         }
+    }
+
+    private static void injectStatusBarCollapse(final LoadPackageParam lpp) {
+        XposedBridge.log(TAG + TAG_CLASS + "in inject status bar collapse");
+        final Class<?> hookClass = XposedHelpers.findClass(
+                "com.android.systemui.statusbar.BaseStatusBar",
+                lpp.classLoader);
+        XposedBridge.hookAllMethods(hookClass, "start", new XC_MethodHook() {
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (statusBar != null) {
+                    XposedBridge
+                            .log(TAG + TAG_CLASS + "the status bar not be cleared last time???");
+                }
+                statusBar = param.thisObject;
+                XposedBridge.log(TAG + TAG_CLASS + "start status bar");
+            }
+        });
+
+        XposedBridge.hookAllMethods(hookClass, "destroy", new XC_MethodHook() {
+
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                statusBar = null;
+                XposedBridge.log(TAG + TAG_CLASS + "destory status bar");
+            }
+        });
     }
 
     private static void injectStatusBarMenu(final LoadPackageParam lpp) {
@@ -143,25 +174,44 @@ public class StatusBarHook {
      */
     private static void collapsePanels(Object thiz) {
         Method collapsePanel;
-        try {
-            // 4.2 and newer
-            collapsePanel = XposedHelpers.findMethodBestMatch(thiz.getClass(), "animateCollapsePanels", Integer.class);
-            collapsePanel.setAccessible(true);
-            // can't get it, wired
-            // :(
-            // CommandQueue.FLAG_EXCLUDE_NONE
-            collapsePanel.invoke(thiz, 0);
-        } catch (Exception e) {
-            XposedBridge.log(e);
-            // 4.1
+        // 4.2 and newer
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            XposedBridge.log(TAG + TAG_CLASS + "thiz : " + thiz + ", > 4.1");
             try {
-//                collapsePanel = thiz.getClass().getDeclaredMethod("animateCollapse", Integer.class);
-                collapsePanel = XposedHelpers.findMethodBestMatch(thiz.getClass(), "animateCollapse", Integer.class);
+                // should fix SystemUI crash on < 4.2 version
+                // 'cause can' catch any exception here
+                collapsePanel = thiz.getClass().getDeclaredMethod("animateCollapsePanels");
                 collapsePanel.setAccessible(true);
-                collapsePanel.invoke(thiz, 0);
+                collapsePanel.invoke(thiz);
+            } catch (Exception e) {
+                XposedBridge.log(e);
+            }
+        } else {
+            // 4.1
+            XposedBridge.log(TAG + TAG_CLASS + "animate collapse 4.1");
+            try {
+                collapsePanel = thiz.getClass()
+                        .getDeclaredMethod("animateCollapse");
+                collapsePanel.setAccessible(true);
+                collapsePanel.invoke(thiz);
             } catch (Exception e1) {
                 XposedBridge.log(e1);
             }
         }
+    }
+
+    /**
+     * collapse the status bar
+     * 
+     * @return
+     */
+    public static boolean collapseStatusBarPanel() {
+        if (statusBar == null) {
+            XposedBridge.log(TAG + TAG_CLASS + "the status bar is null");
+            return false;
+        }
+
+        collapsePanels(statusBar);
+        return true;
     }
 }
