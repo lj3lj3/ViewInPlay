@@ -1,9 +1,12 @@
 
 package info.daylemk.viewinplay;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.pm.ApplicationInfo;
 import android.content.res.XModuleResources;
+import android.os.Build;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,6 +23,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 public class AppInfoHook {
     private static final String TAG = "DayL";
     private static final String TAG_CLASS = "[AppInfoHook]";
+
+    private static String ARG_PACKAGE_NAME = null;
 
     public static void initZygote(XModuleResources module_res) {
         // TEXT_APP_INFO = module_res.get
@@ -85,15 +90,28 @@ public class AppInfoHook {
                 final Fragment thiz = (Fragment) param.thisObject;
                 Common.debugLog(TAG + TAG_CLASS + "thiz : " + thiz);
 
-                Object appEntry = XposedHelpers.getObjectField(param.thisObject, "mAppEntry");
-                Common.debugLog(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
-                final ApplicationInfo info = (ApplicationInfo) XposedHelpers.getObjectField(
-                        appEntry,
-                        "info");
-                Common.debugLog(TAG + TAG_CLASS + "we found the app info : " + info);
-                XposedBridge.log(TAG + TAG_CLASS + "the package name is : " + info.packageName);
+                String pkgName = null;
+                // > 4.2
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                    Object appEntry = XposedHelpers.getObjectField(param.thisObject, "mAppEntry");
+                    Common.debugLog(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
+                    final ApplicationInfo info = (ApplicationInfo) XposedHelpers.getObjectField(
+                            appEntry,
+                            "info");
+                    Common.debugLog(TAG + TAG_CLASS + "we found the app info : " + info);
+                    pkgName = info.packageName;
+                } else {
+                    // 4.1
+                    pkgName = getPkgNameOnJB(thiz);
+                    if (pkgName == null){
+                        XposedBridge.log(TAG + TAG_CLASS + "the package name is null??? return");
+                        return;
+                    }
+                }
 
-                if (!RecentTaskHook.isAndroidStockApp(info.packageName)) {
+                XposedBridge.log(TAG + TAG_CLASS + "the package name is : " + pkgName);
+                final String packageName = pkgName;
+                if (!RecentTaskHook.isAndroidStockApp(packageName)) {
                     final View rootView = (View) XposedHelpers.getObjectField(param.thisObject,
                             "mRootView");
                     Button viewInPlayButton = (Button) rootView
@@ -102,13 +120,38 @@ public class AppInfoHook {
                     viewInPlayButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            RecentTaskHook.viewInPlay(thiz.getActivity(), info.packageName);
+                            RecentTaskHook.viewInPlay(thiz.getActivity(), packageName);
                         }
                     });
                 } else {
-                    XposedBridge.log(TAG + TAG_CLASS + "stock app : " + info.packageName);
+                    XposedBridge.log(TAG + TAG_CLASS + "stock app : " + packageName);
                 }
             }
         });
+    }
+
+    /**
+     * get the package name on 4.1
+     * @param thiz
+     * @return
+     */
+    private static String getPkgNameOnJB(Object thiz) {
+        XposedBridge.log(TAG + TAG_CLASS + "get package name on 4.1");
+        // use helper here, 'cause we know this method are always
+        // available to call
+        Object object = XposedHelpers.callMethod(thiz, "getArguments");
+        if (object == null) {
+            XposedBridge.log(TAG + TAG_CLASS
+                    + "the get arguments is return null???, nothing can do");
+            return null;
+        }
+        // get the string of arg_package_name, also, it's should be
+        // always available
+        if (ARG_PACKAGE_NAME == null) {
+            ARG_PACKAGE_NAME = (String) XposedHelpers.getStaticObjectField(
+                    thiz.getClass(), "ARG_PACKAGE_NAME");
+        }
+
+        return ((Bundle) object).getString(ARG_PACKAGE_NAME);
     }
 }

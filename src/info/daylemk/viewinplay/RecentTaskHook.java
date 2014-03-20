@@ -484,11 +484,15 @@ public class RecentTaskHook {
 
     /**
      * check if the package is the stock app or not
-     * 
+     * added : Null check
      * @param pkgName
      * @return
      */
     static boolean isAndroidStockApp(String pkgName) {
+        if(pkgName == null){
+            XposedBridge.log(TAG + TAG_CLASS + "the package name is null, isAndroidStockApp");
+            return false;
+        }
         // to lower case
         String pkgNameInner = pkgName.toLowerCase(Locale.ENGLISH);
         if (XposedInit.isStockAndroidApp(pkgNameInner))
