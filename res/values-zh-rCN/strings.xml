@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="version_string">版本</string>
+    <string name="app_name">ViewInPlay</string>
+    <string name="action_settings">设置</string>
+    <string name="xposed_description">"在最近任务长按菜单、应用程序信息、通知长按菜单中添加“在Play商店中查看”按钮，或者两指点击最近任务缩略图跳转到play商店的应用界面"</string>
+
+    <string name="recents_remove_from_list">从列表中删除</string>
+    <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="recents_open_halo">在halo中打开</string>
+    <string name="notif_app_info">应用程序信息</string>
+    <string name="view_in_play">View in Play</string>
+
+    <string name="pref_title_show_in_recent_panel">在最近任务长按菜单中显示</string>
+    <string name="pref_summary_show_in_recent_panel_on">将会在最近任务的长按菜单中显示“在Play商店中查看”按钮</string>
+    <string name="pref_summary_show_in_recent_panel_off">不会在最近任务界面中显示</string>
+    <string name="pref_title_show_in_app_info">在应用程序信息界面中显示</string>
+    <string name="pref_summary_show_in_app_info_on">将会在应用程序信息界面中显示“在Play商店中查看”按钮</string>
+    <string name="pref_summary_show_in_app_info_off">不会在应用程序信息中显示</string>
+    <string name="pref_title_two_finger_in_recent_panel">两指点击缩略图调转到Play商店</string>
+    <string name="pref_summary_two_finger_in_recent_panel_on">可以两指点击最近任务中的缩略图调转到Play商店</string>
+    <string name="pref_summary_two_finger_in_recent_panel_off">不可使用最近任务中的两指点击功能</string>
+    <string name="pref_title_show_in_notification">在通知长按菜单中显示</string>
+    <string name="pref_summary_show_in_notification_on">将会在通知面板中的通知长按菜单中显示“在Play商店中查看”按钮</string>
+    <string name="pref_summary_show_in_notification_off">不会显示在通知面板中</string>
+    <string name="pref_title_directly_view_in_play">直接打开Play商店</string>
+    <string name="pref_summary_directly_view_in_play_on">直接打开Play商店，不会弹出选择应用程序界面</string>
+    <string name="pref_summary_directly_view_in_play_off">不会直接打开Play商店，会弹出应用程序选择界面，可以自由选择其它商店查看</string>
+    <string name="pref_title_compatibility">兼容性</string>
+    <string name="pref_title_compat_xhalo">兼容XHaloWindow</string>
+    <string name="pref_summary_compat_xhalo">兼容XHaloWindow</string>
+    <string name="pref_title_note">提示</string>
+    <!-- this may be edited often -->
+    <string name="pref_summary_note">更改选项或者升级版本后，请重启系统。</string>
+    <string name="pref_title_xda">XDA页面</string>
+    <string name="pref_summary_xda">点击查看本应用在XDA的页面</string>
+    <string name="pref_title_about">关于</string>
+    <string name="pref_title_hide_icon">隐藏应用图标</string>
+    <string name="pref_summary_hide_icon_on">隐藏后的应用图标无法再次开启，在Xposed installer中的模块（module）界面中开启此设置界面</string>
+    <string name="pref_summary_hide_icon_off">点击隐藏应用图标</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">只有从启动器开启本应用才可以修改此设置</string>
+    <string name="pref_title_extra">附加项</string>
+    
+    <string name="no_play_on_the_phone">哦~没有发现Play商店，请确认已经安装了谷歌的Play商店。</string>
+    <string name="stock_app">不好意思，这是系统原生应用，Play商店中没有此应用信息。</string>
+    <string name="notice_hide_icon">确定要隐藏应用图标么？一旦隐藏，只有卸载并重新安装此应用才可以再次显示应用图标。</string>
+    <!-- <string name="cant_open_in_xhalo">"Sorry, can't launch it. make sure you have XHaloWindow, and actived it :)"</string> -->
+</resources>

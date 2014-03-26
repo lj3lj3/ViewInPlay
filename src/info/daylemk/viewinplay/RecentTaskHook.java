@@ -187,7 +187,7 @@ public class RecentTaskHook {
                         // if we have exception here
                         // if the text is null
                         // if the text is empty
-                        // in this condition, we all needs set the text to the
+                        // in these conditions, we all needs set the text to the
                         // default
                         if (exceptted || TEXT_REMOVE_FROM_LIST_STOCK == null
                                 || TEXT_APP_INFO_STOCK == null
@@ -517,7 +517,9 @@ public class RecentTaskHook {
     static void viewInPlay(Context ctx, String packageName) {
         XposedBridge.log(TAG + TAG_CLASS + "view in play : " + packageName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+//        intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+        // move to this, so can view in different app store
+        intent.setData(Uri.parse("market://details?id=" + packageName));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
 
         checkPlay(ctx, intent);
