@@ -1,7 +1,6 @@
 
 package info.daylemk.viewinplay;
 
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.pm.ApplicationInfo;
 import android.content.res.XModuleResources;
@@ -85,53 +84,68 @@ public class AppInfoHook {
         final Class<?> hookClass = XposedHelpers.findClass(
                 "com.android.settings.applications.InstalledAppDetails",
                 lpp.classLoader);
-        XposedBridge.hookAllMethods(hookClass, "onCreateView", new XC_MethodHook() {
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                final Fragment thiz = (Fragment) param.thisObject;
-                Common.debugLog(TAG + TAG_CLASS + "thiz : " + thiz);
-
-                String pkgName = null;
-                // > 4.2
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                    Object appEntry = XposedHelpers.getObjectField(param.thisObject, "mAppEntry");
-                    Common.debugLog(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
-                    final ApplicationInfo info = (ApplicationInfo) XposedHelpers.getObjectField(
-                            appEntry,
-                            "info");
-                    Common.debugLog(TAG + TAG_CLASS + "we found the app info : " + info);
-                    pkgName = info.packageName;
-                } else {
-                    // 4.1
-                    pkgName = getPkgNameOnJB(thiz);
-                    if (pkgName == null){
-                        XposedBridge.log(TAG + TAG_CLASS + "the package name is null??? return");
-                        return;
-                    }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            XposedBridge.hookAllMethods(hookClass, "onCreateView", new XC_MethodHook() {
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    injection(param);
                 }
-
-                XposedBridge.log(TAG + TAG_CLASS + "the package name is : " + pkgName);
-                final String packageName = pkgName;
-                if (!RecentTaskHook.isAndroidStockApp(packageName)) {
-                    final View rootView = (View) XposedHelpers.getObjectField(param.thisObject,
-                            "mRootView");
-                    Button viewInPlayButton = (Button) rootView
-                            .findViewById(R.id.id_view_in_play_app_info);
-                    viewInPlayButton.setVisibility(View.VISIBLE);
-                    viewInPlayButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            RecentTaskHook.viewInPlay(thiz.getActivity(), packageName);
-                        }
-                    });
-                } else {
-                    XposedBridge.log(TAG + TAG_CLASS + "stock app : " + packageName);
+            });
+        } else {
+            // 4.1 just inject here, not create view
+            XposedHelpers.findAndHookMethod(hookClass, "refreshUi", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    injection(param);
                 }
-            }
-        });
+            });
+        }
+    }
+
+    /**
+     * the injection is same
+     * 
+     * @param param
+     */
+    private static void injection(XC_MethodHook.MethodHookParam param) {
+        final Fragment thiz = (Fragment) param.thisObject;
+        Common.debugLog(TAG + TAG_CLASS + "thiz : " + thiz);
+
+        Object appEntry = XposedHelpers.getObjectField(param.thisObject,
+                "mAppEntry");
+        Common.debugLog(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
+        // check null here
+        if (appEntry == null) {
+            XposedBridge.log(TAG + TAG_CLASS + "the app entry is null??? return");
+            return;
+        }
+        final ApplicationInfo info = (ApplicationInfo) XposedHelpers
+                .getObjectField(
+                        appEntry,
+                        "info");
+        Common.debugLog(TAG + TAG_CLASS + "we found the app info : " + info);
+        XposedBridge.log(TAG + TAG_CLASS + "the package name is : " + info.packageName);
+        final String packageName = info.packageName;
+
+        if (!RecentTaskHook.isAndroidStockApp(packageName)) {
+            final View rootView = (View) XposedHelpers.getObjectField(param.thisObject,
+                    "mRootView");
+            Button viewInPlayButton = (Button) rootView
+                    .findViewById(R.id.id_view_in_play_app_info);
+            viewInPlayButton.setVisibility(View.VISIBLE);
+            viewInPlayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecentTaskHook.viewInPlay(thiz.getActivity(), packageName);
+                }
+            });
+        } else {
+            XposedBridge.log(TAG + TAG_CLASS + "stock app : " + packageName);
+        }
     }
 
     /**
      * get the package name on 4.1
+     * EDIT:unused, can't see where is wrong
      * @param thiz
      * @return
      */
