@@ -3,23 +3,32 @@
 	<string name="version_string">Versione</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">Impostazioni</string>
-    <string name="hello_world">Ciao mondo!</string>
     <string name="xposed_description">"questo modulo aggiunge il menù 'mostra nel play store' nel pannello 'App recenti' e nella schermata 'Informazioni applicazione'."</string>
 
     <string name="recents_remove_from_list">Rimuovi dall\'elenco</string>
     <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="recents_open_halo">Apri in halo</string>
     <string name="notif_app_info">Informazioni applicazione</string>
     <string name="view_in_play">Mostra nel Play Store</string>
 
     <string name="pref_title_show_in_recent_panel">Mostra in \'App recenti\' </string>
     <string name="pref_summary_show_in_recent_panel_on">"il menu 'mostra nel play store' sarà mostrato nel pannello 'App recenti' con una pressione prolungata"</string>
-    <string name="pref_summary_show_in_recent_panel_off"></string>
+    <string name="pref_summary_show_in_recent_panel_off">"abilitando questa opzione verrà aggiunto il menù 'mostra nel play store' nel pannello 'App recenti' con una pressione prolungata"</string>
     <string name="pref_title_show_in_app_info">Mostra in \'Informazioni applicazione\' </string>
     <string name="pref_summary_show_in_app_info_on">"il menu 'mostra nel play store' sarà mostrato nella schermata 'Informazioni applicazione'"</string>
-    <string name="pref_summary_show_in_app_info_off"></string>
+    <string name="pref_summary_show_in_app_info_off">"abilitando questa opzione verrà aggiunto il menù 'mostra nel play store' nella schermata 'Informazioni applicazione'"</string>
+    <string name="pref_title_two_finger_in_recent_panel">Vai allo Store con due dita</string>
+    <string name="pref_summary_two_finger_in_recent_panel_on">"tocca con due dita l'anteprima nel pannello 'App recenti' per andare al Play Store"</string>
+    <string name="pref_summary_two_finger_in_recent_panel_off">"abilitando questa opzione potrai di usare il tocco con due dita dell'anteprima nel pannello 'App recenti' per andare al Play Store"</string>
+    <string name="pref_title_show_in_notification">Mostra nel pannello \'Notifiche\'</string>
+    <string name="pref_summary_show_in_notification_on">"il menu 'mostra nel play store' sarà mostrato con una pressione prolungata sulla notifica"</string>
+    <string name="pref_summary_show_in_notification_off">"abilitando questa opzione verrà aggiunto il menù 'mostra nel play store' tra le opzioni presenti dopo una pressione prolungata sulle notifiche"</string>
     <string name="pref_title_directly_view_in_play">Apri nel Play Store</string>
     <string name="pref_summary_directly_view_in_play_on">apri direttamente nel Play Store, non mostrare la schermata di selezione app</string>
     <string name="pref_summary_directly_view_in_play_off">mostrerà la schermata di selezione app, permettendoti di scegliere con quale app gestire l\'azione</string>
+    <string name="pref_title_compatibility">Compatibilità</string>
+    <string name="pref_title_compat_xhalo">XHaloWindow</string>
+    <string name="pref_summary_compat_xhalo">XHaloWindow</string>
     <string name="pref_title_note">Note</string>
     <!-- this may be edited often -->
     <string name="pref_summary_note">Dopo modifiche o aggiornamenti, Per favore riavvia il dispositivo</string>
@@ -29,9 +38,11 @@
     <string name="pref_title_hide_icon">Nascondi l\'icona dal launcher</string>
     <string name="pref_summary_hide_icon_on">"l\'icona dell\'applicazione non potrà essere riportata nel launcher, a meno che tu non reinstalli l\'applicazione. trovami nella lista dei moduli su Xposed."</string>
     <string name="pref_summary_hide_icon_off">seleziona per nascondere l\'icona dal launcher</string>
-    <string name="pref_summary_hide_icon_not_from_launcher">only come from your launcher can toggle this checkboxxxxx</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">solo arrivando dal tuo launcher potrai modificare questa opzionex</string>
     <string name="pref_title_extra">Extra</string>
 
     <string name="no_play_on_the_phone">oh~ non hai il Google Play Store??? se sei sicuro di averlo, per favore contattami :)</string>
+    <string name="stock_app">"Mi spiace~ questa è un'app di sistema, non può essere mostrata nel Play Store."</string>
     <string name="notice_hide_icon">"Sei sicuro? una volta nascosta, non potrai riaverla finché non reinstallerai l'applicazione (per ora)"</string>
+    <!-- <string name="cant_open_in_xhalo">"Mi spiace, non è possibile lanciarlo. Assicurati di avere XHaloWindow installato ed attivo :)"</string> -->
 </resources>
