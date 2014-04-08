@@ -33,11 +33,6 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     private static List<String> stockAndroidApp;
     private static String MODULE_PATH = null;
     private static XSharedPreferences mPref;
-    private static TextView tvClock;
-
-    public static TextView getClock() {
-        return tvClock;
-    }
 
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
