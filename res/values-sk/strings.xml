@@ -7,6 +7,7 @@
 
     <string name="recents_remove_from_list">Odstrániť zo zoznamu</string>
     <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="recents_open_halo">Otvoriť v halo</string>
     <string name="notif_app_info">Informácie o aplikácii</string>
     <string name="view_in_play">Zobraziť v Obchode</string>
     
@@ -25,6 +26,9 @@
     <string name="pref_title_directly_view_in_play">Otvoriť priamo v Obchode Google Play</string>
     <string name="pref_summary_directly_view_in_play_on">Otvorí priamo v Obchode Google Play, nezobrazí možnosť Dokončiť akciu pomocou aplikácie</string>
     <string name="pref_summary_directly_view_in_play_off">Zobrazí Dokončiť akciu pomocou aplikácie</string>
+    <string name="pref_title_compatibility">Kompatibilita</string>
+    <string name="pref_title_compat_xhalo">XHaloWindow</string>
+    <string name="pref_summary_compat_xhalo">XHaloWindow</string>
     <string name="pref_title_note">Poznámka</string>
     <!-- this may be edited often -->
     <string name="pref_summary_note">Po zmene prosím reštartujte zariadenie</string>
