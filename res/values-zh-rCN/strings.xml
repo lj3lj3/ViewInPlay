@@ -3,7 +3,7 @@
 	<string name="version_string">版本</string>
     <string name="app_name">ViewInPlay</string>
     <string name="action_settings">设置</string>
-    <string name="xposed_description">"在最近任务长按菜单、应用程序信息、通知长按菜单中添加“在Play商店中查看”按钮，或者两指点击最近任务缩略图跳转到play商店的应用界面"</string>
+    <string name="xposed_description">提供多种方式快捷地调转至应用在Play商店中的页面</string>
 
     <string name="recents_remove_from_list">从列表中删除</string>
     <string name="recents_app_info">@string/notif_app_info</string>
@@ -39,6 +39,7 @@
     <string name="pref_summary_hide_icon_on">隐藏后的应用图标无法再次开启，在Xposed installer中的模块（module）界面中开启此设置界面</string>
     <string name="pref_summary_hide_icon_off">点击隐藏应用图标</string>
     <string name="pref_summary_hide_icon_not_from_launcher">只有从启动器开启本应用才可以修改此设置</string>
+    <string name="pref_tilte_debug_logs">应用调试日志</string>
     <string name="pref_title_extra">附加项</string>
     
     <string name="no_play_on_the_phone">哦~没有发现Play商店，请确认已经安装了谷歌的Play商店。</string>

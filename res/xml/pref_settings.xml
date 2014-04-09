@@ -40,6 +40,10 @@
             android:summaryOff="@string/pref_summary_hide_icon_off"
             android:summaryOn="@string/pref_summary_hide_icon_on"
             android:title="@string/pref_title_hide_icon" />
+        <CheckBoxPreference 
+            android:defaultValue="false"
+            android:key="@string/key_debug_logs"
+            android:title="@string/pref_tilte_debug_logs"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_title_compatibility" >
         <CheckBoxPreference

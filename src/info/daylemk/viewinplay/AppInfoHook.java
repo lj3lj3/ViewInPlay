@@ -37,10 +37,10 @@ public class AppInfoHook {
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
         if (!lpp.packageName.equals("com.android.settings"))
             return;
-        XposedBridge.log(TAG + TAG_CLASS + "handle load package");
+        Common.debugLog(TAG + TAG_CLASS + "handle load package");
         Common.debugLog(TAG + TAG_CLASS + "directlyShowInPlay = "
                 + XposedInit.directlyShowInPlay);
-        XposedBridge.log(TAG + TAG_CLASS + "contain???"
+        Common.debugLog(TAG + TAG_CLASS + "contain???"
                 + pref.contains(XposedInit.KEY_SHOW_IN_APP_INFO));
         pref.reload();
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_APP_INFO,
@@ -52,7 +52,7 @@ public class AppInfoHook {
     public static void handleInitPackageResources(InitPackageResourcesParam resparam) {
         if (!resparam.packageName.equals("com.android.settings"))
             return;
-        XposedBridge.log(TAG + TAG_CLASS + "handle init resouces");
+        Common.debugLog(TAG + TAG_CLASS + "handle init resouces");
         resparam.res.hookLayout("com.android.settings", "layout", "installed_app_details",
                 new XC_LayoutInflated() {
                     @Override
@@ -80,7 +80,7 @@ public class AppInfoHook {
     }
 
     private static void injectMenu(final LoadPackageParam lpp) {
-        XposedBridge.log(TAG + TAG_CLASS + "in inject menu");
+        Common.debugLog(TAG + TAG_CLASS + "in inject menu");
         final Class<?> hookClass = XposedHelpers.findClass(
                 "com.android.settings.applications.InstalledAppDetails",
                 lpp.classLoader);
@@ -115,7 +115,7 @@ public class AppInfoHook {
         Common.debugLog(TAG + TAG_CLASS + "we found the mAppEntry : " + appEntry);
         // check null here
         if (appEntry == null) {
-            XposedBridge.log(TAG + TAG_CLASS + "the app entry is null??? return");
+            Common.debugLog(TAG + TAG_CLASS + "the app entry is null??? return");
             return;
         }
         final ApplicationInfo info = (ApplicationInfo) XposedHelpers
@@ -123,7 +123,7 @@ public class AppInfoHook {
                         appEntry,
                         "info");
         Common.debugLog(TAG + TAG_CLASS + "we found the app info : " + info);
-        XposedBridge.log(TAG + TAG_CLASS + "the package name is : " + info.packageName);
+        Common.debugLog(TAG + TAG_CLASS + "the package name is : " + info.packageName);
         final String packageName = info.packageName;
 
         if (!RecentTaskHook.isAndroidStockApp(packageName)) {
@@ -139,7 +139,7 @@ public class AppInfoHook {
                 }
             });
         } else {
-            XposedBridge.log(TAG + TAG_CLASS + "stock app : " + packageName);
+            Common.debugLog(TAG + TAG_CLASS + "stock app : " + packageName);
         }
     }
 
@@ -150,12 +150,12 @@ public class AppInfoHook {
      * @return
      */
     private static String getPkgNameOnJB(Object thiz) {
-        XposedBridge.log(TAG + TAG_CLASS + "get package name on 4.1");
+        Common.debugLog(TAG + TAG_CLASS + "get package name on 4.1");
         // use helper here, 'cause we know this method are always
         // available to call
         Object object = XposedHelpers.callMethod(thiz, "getArguments");
         if (object == null) {
-            XposedBridge.log(TAG + TAG_CLASS
+            Common.debugLog(TAG + TAG_CLASS
                     + "the get arguments is return null???, nothing can do");
             return null;
         }

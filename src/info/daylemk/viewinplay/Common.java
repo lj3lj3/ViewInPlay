@@ -7,7 +7,8 @@ import de.robv.android.xposed.XposedBridge;
 public class Common {
 
     public static void debugLog(String s) {
-        if (BuildConfig.DEBUG) {
+        // change to debuggable
+        if (XposedInit.debuggable) {
             XposedBridge.log(s);
         }
     }
@@ -22,6 +23,7 @@ public class Common {
     // halo
     public static final boolean DEFAULT_COMPAT_XHALO = false;
     public static final boolean DEFAULT_DIRECTLY_SHOW_IN_PLAY = false;
+    public static final boolean DEFAULT_DEBUG_LOGS = false;
 
     // for open in halo
     public static final int FLAG_FLOATING_WINDOW = 0x00002000;

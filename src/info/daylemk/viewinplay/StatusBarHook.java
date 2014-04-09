@@ -28,7 +28,7 @@ public class StatusBarHook {
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
         if (!lpp.packageName.equals("com.android.systemui"))
             return;
-        XposedBridge.log(TAG + TAG_CLASS + "handle package");
+        Common.debugLog(TAG + TAG_CLASS + "handle package");
         pref.reload();
 
         injectStatusBarCollapse(lpp);
@@ -40,7 +40,7 @@ public class StatusBarHook {
     }
 
     private static void injectStatusBarCollapse(final LoadPackageParam lpp) {
-        XposedBridge.log(TAG + TAG_CLASS + "in inject status bar collapse");
+        Common.debugLog(TAG + TAG_CLASS + "in inject status bar collapse");
         final Class<?> hookClass = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.BaseStatusBar",
                 lpp.classLoader);
@@ -53,7 +53,7 @@ public class StatusBarHook {
                             .log(TAG + TAG_CLASS + "the status bar not be cleared last time???");
                 }
                 statusBar = param.thisObject;
-                XposedBridge.log(TAG + TAG_CLASS + "start status bar");
+                Common.debugLog(TAG + TAG_CLASS + "start status bar");
             }
         });
 
@@ -62,13 +62,13 @@ public class StatusBarHook {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 statusBar = null;
-                XposedBridge.log(TAG + TAG_CLASS + "destory status bar");
+                Common.debugLog(TAG + TAG_CLASS + "destory status bar");
             }
         });
     }
 
     private static void injectStatusBarMenu(final LoadPackageParam lpp) {
-        XposedBridge.log(TAG + TAG_CLASS + "in inject status bar menu");
+        Common.debugLog(TAG + TAG_CLASS + "in inject status bar menu");
         final Class<?> hookClass = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.BaseStatusBar",
                 lpp.classLoader);
@@ -82,12 +82,12 @@ public class StatusBarHook {
                     popupMenuId = res.getIdentifier("notification_popup_menu", "menu",
                             "com.android.systemui");
                 }
-                XposedBridge.log(TAG + TAG_CLASS + "the menu id is " + popupMenuId);
+                Common.debugLog(TAG + TAG_CLASS + "the menu id is " + popupMenuId);
                 if (inspectItemId == 0) {
                     inspectItemId = res.getIdentifier("notification_inspect_item", "id",
                             "com.android.systemui");
                 }
-                XposedBridge.log(TAG + TAG_CLASS + "the inspect menu id is " + inspectItemId);
+                Common.debugLog(TAG + TAG_CLASS + "the inspect menu id is " + inspectItemId);
 
                 View.OnLongClickListener listerner = new View.OnLongClickListener() {
                     @Override
@@ -104,7 +104,7 @@ public class StatusBarHook {
                                     popupMenuId,
                                     mPopupMenu.getMenu());
                         } else {
-                            XposedBridge.log(TAG + TAG_CLASS + "the popup menu id is 0 ???");
+                            Common.debugLog(TAG + TAG_CLASS + "the popup menu id is 0 ???");
                             mPopupMenu.getMenu().add(Menu.NONE, RecentTaskHook.ID_APP_INFO, 1,
                                     RecentTaskHook.TEXT_APP_INFO);
                         }
@@ -114,7 +114,7 @@ public class StatusBarHook {
                                     RecentTaskHook.TEXT_VIEW_IN_PLAY);
                             Common.debugLog(TAG + TAG_CLASS + "not stock app : " + packageNameF);
                         } else {
-                            XposedBridge.log(TAG + TAG_CLASS + "stock app : " + packageNameF);
+                            Common.debugLog(TAG + TAG_CLASS + "stock app : " + packageNameF);
                         }
 
                         mPopupMenu
@@ -151,7 +151,7 @@ public class StatusBarHook {
                                             collapsePanels(thiz);
                                             return true;
                                         }
-                                        XposedBridge.log(TAG + TAG_CLASS + "not handled click : "
+                                        Common.debugLog(TAG + TAG_CLASS + "not handled click : "
                                                 + itemId);
                                         return false;
                                     }
@@ -176,7 +176,7 @@ public class StatusBarHook {
         Method collapsePanel;
         // 4.2 and newer
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            XposedBridge.log(TAG + TAG_CLASS + "thiz : " + thiz + ", > 4.1");
+            Common.debugLog(TAG + TAG_CLASS + "thiz : " + thiz + ", > 4.1");
             try {
                 // should fix SystemUI crash on < 4.2 version
                 // 'cause can' catch any exception here
@@ -188,7 +188,7 @@ public class StatusBarHook {
             }
         } else {
             // 4.1
-            XposedBridge.log(TAG + TAG_CLASS + "animate collapse 4.1");
+            Common.debugLog(TAG + TAG_CLASS + "animate collapse 4.1");
             try {
                 collapsePanel = thiz.getClass()
                         .getDeclaredMethod("animateCollapse");
@@ -207,7 +207,7 @@ public class StatusBarHook {
      */
     public static boolean collapseStatusBarPanel() {
         if (statusBar == null) {
-            XposedBridge.log(TAG + TAG_CLASS + "the status bar is null");
+            Common.debugLog(TAG + TAG_CLASS + "the status bar is null");
             return false;
         }
 

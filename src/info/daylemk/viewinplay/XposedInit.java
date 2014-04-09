@@ -2,7 +2,6 @@
 package info.daylemk.viewinplay;
 
 import android.content.res.XModuleResources;
-import android.widget.TextView;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -27,7 +26,10 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     static String KEY_SHOW_IN_NOTIFICATION;
     static String KEY_TWO_FINGER_IN_RECENT_PANEL;
     static String KEY_COMPAT_XHALO;
+    // add for debug
+    static String KEY_DEBUG_LOGS;
     static boolean directlyShowInPlay = false;
+    static boolean debuggable = false;
 
     private static List<String> notStockApp;
     private static List<String> stockAndroidApp;
@@ -48,8 +50,12 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         KEY_SHOW_IN_NOTIFICATION = sModRes.getString(R.string.key_show_in_notification);
         KEY_TWO_FINGER_IN_RECENT_PANEL = sModRes.getString(R.string.key_two_finger_in_recent_panel);
         KEY_COMPAT_XHALO = sModRes.getString(R.string.key_compat_xhalo);
+        KEY_DEBUG_LOGS = sModRes.getString(R.string.key_debug_logs);
+
         notStockApp = Arrays.asList(sModRes.getStringArray(R.array.not_stock_app));
         stockAndroidApp = Arrays.asList(sModRes.getStringArray(R.array.stock_android_app));
+
+        XposedBridge.log(TAG + "[]init done");
     }
 
     @Override
@@ -70,13 +76,15 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
                 && !lpparam.packageName.equals("com.android.settings"))
             return;
 
-        XposedBridge.log(TAG + "lpparam.packageName:" + lpparam.packageName);
 
         mPref.reload();
         directlyShowInPlay = mPref.getBoolean(KEY_DIRECTLY_SHOW_IN_PLAY,
                 Common.DEFAULT_DIRECTLY_SHOW_IN_PLAY);
+        // debug
+        debuggable = mPref.getBoolean(KEY_DEBUG_LOGS, Common.DEFAULT_DEBUG_LOGS);
 
-        XposedBridge.log(TAG + "the directly is " + directlyShowInPlay);
+        Common.debugLog(TAG + "[]lpparam.packageName:" + lpparam.packageName);
+        Common.debugLog(TAG + "[]the directly is " + directlyShowInPlay);
     }
 
     @Override

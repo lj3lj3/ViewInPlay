@@ -83,18 +83,18 @@ public class RecentTaskHook {
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
         if (!lpp.packageName.equals("com.android.systemui"))
             return;
-        XposedBridge.log(TAG + TAG_CLASS + "handle package");
+        Common.debugLog(TAG + TAG_CLASS + "handle package");
         Common.debugLog(TAG + TAG_CLASS + "directlyShowInPlay = "
                 + XposedInit.directlyShowInPlay);
 
         StringBuffer sb = new StringBuffer();
         Set<String> set = pref.getAll().keySet();
-        XposedBridge.log(TAG + TAG_CLASS + "size : " + set.size());
+        Common.debugLog(TAG + TAG_CLASS + "size : " + set.size());
         for (Iterator<String> iterator = set.iterator(); iterator.hasNext();) {
             sb.append(iterator.next() + ", ");
         }
         Common.debugLog(TAG + TAG_CLASS + "keys : " + sb.toString());
-        XposedBridge.log(TAG + TAG_CLASS + "contain???"
+        Common.debugLog(TAG + TAG_CLASS + "contain???"
                 + pref.contains(XposedInit.KEY_SHOW_IN_RECENT_PANEL));
 
         pref.reload();
@@ -114,7 +114,7 @@ public class RecentTaskHook {
     }
 
     private static void injectMenu(final LoadPackageParam lpp) {
-        XposedBridge.log(TAG + TAG_CLASS + "in inject menu");
+        Common.debugLog(TAG + TAG_CLASS + "in inject menu");
         final Class<?> hookClass = XposedHelpers.findClass(
                 "com.android.systemui.recent.RecentsPanelView",
                 lpp.classLoader);
@@ -131,10 +131,10 @@ public class RecentTaskHook {
                 // if the app is stock app, we should not show the 'view in
                 // play' menu
                 String pkgName = getPackageName(viewHolder);
-                XposedBridge.log(TAG + TAG_CLASS + "the package is : " + pkgName);
+                Common.debugLog(TAG + TAG_CLASS + "the package is : " + pkgName);
                 if (isAndroidStockApp(pkgName)) {
                     // stock app, return
-                    XposedBridge.log(TAG + TAG_CLASS + "stock app");
+                    Common.debugLog(TAG + TAG_CLASS + "stock app");
                     return;
                 }
 
@@ -143,7 +143,7 @@ public class RecentTaskHook {
                     recentRemoveItemId = res.getIdentifier("recent_remove_item", "id",
                             "com.android.systemui");
                 }
-                XposedBridge.log(TAG + TAG_CLASS + "the recent remove menu id is "
+                Common.debugLog(TAG + TAG_CLASS + "the recent remove menu id is "
                         + recentRemoveItemId);
                 if (recentRemoveItemId != 0) {
                     ID_REMOVE_FROM_LIST = recentRemoveItemId;
@@ -180,7 +180,7 @@ public class RecentTaskHook {
                                     "status_bar_recent_inspect_item_title", "string",
                                     "com.android.systemui"));
                         } catch (Exception e) {
-                            XposedBridge.log(TAG + TAG_CLASS + "can't get the text of stock text");
+                            Common.debugLog(TAG + TAG_CLASS + "can't get the text of stock text");
                             exceptted = true;
                         }
 
@@ -193,7 +193,7 @@ public class RecentTaskHook {
                                 || TEXT_APP_INFO_STOCK == null
                                 || TEXT_REMOVE_FROM_LIST_STOCK.equals("")
                                 || TEXT_APP_INFO_STOCK.equals("")) {
-                            XposedBridge.log(TAG + TAG_CLASS + "set the text to the default ");
+                            Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
                             TEXT_REMOVE_FROM_LIST_STOCK = TEXT_REMOVE_FROM_LIST;
                             TEXT_APP_INFO_STOCK = TEXT_APP_INFO;
                         } else {
@@ -212,7 +212,7 @@ public class RecentTaskHook {
 
                 // if the xhalo compatibility is on, add that menu
                 if (bool_compat_xhalo) {
-                    XposedBridge.log(TAG + TAG_CLASS + "the xhalo compatibility");
+                    Common.debugLog(TAG + TAG_CLASS + "the xhalo compatibility");
                     // re-open it
                     mPopupMenu.getMenu().add(Menu.NONE, ID_OPEN_IN_XHALO, 3,
                             TEXT_OPEN_IN_XHALO);
@@ -231,7 +231,7 @@ public class RecentTaskHook {
                 final PopupMenu.OnMenuItemClickListener menu = new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         int itemId = item.getItemId();
-                        XposedBridge.log(TAG + TAG_CLASS + "item clicked : " + itemId);
+                        Common.debugLog(TAG + TAG_CLASS + "item clicked : " + itemId);
                         try {
                             if (itemId == ID_REMOVE_FROM_LIST) {
                                 ViewGroup recentsContainer = (ViewGroup) hookClass
@@ -277,7 +277,7 @@ public class RecentTaskHook {
                                 return true;
                             }
                         } catch (Throwable t) {
-                            XposedBridge.log(Common.LOG_TAG);
+                            Common.debugLog(Common.LOG_TAG);
                             XposedBridge.log(t);
                         }
                         return false;
@@ -303,7 +303,7 @@ public class RecentTaskHook {
     }
 
     private static void injectTouchEvents(final LoadPackageParam lpp) {
-        XposedBridge.log(TAG + TAG_CLASS + "in inject touch eventss");
+        Common.debugLog(TAG + TAG_CLASS + "in inject touch eventss");
         final Class<?> hookClass = XposedHelpers.findClass(
                 "com.android.systemui.recent.RecentsVerticalScrollView",
                 lpp.classLoader);
@@ -329,9 +329,9 @@ public class RecentTaskHook {
                                     + "Exception in linear layout, can't find mLinearLayout");
                 }
                 if (mLinearLayout != null) {
-                    XposedBridge.log(TAG + TAG_CLASS + "in inject touch events, OK");
+                    Common.debugLog(TAG + TAG_CLASS + "in inject touch events, OK");
                     if (sTouchListener == null) {
-                        XposedBridge.log(TAG + TAG_CLASS + "new a touch listener");
+                        Common.debugLog(TAG + TAG_CLASS + "new a touch listener");
                         sTouchListener = new RecentsOnTouchLis();
                     }
                     FrameLayout frameLayout;
@@ -345,7 +345,7 @@ public class RecentTaskHook {
                                 sTouchListener);
                     }
                 } else {
-                    XposedBridge.log(TAG + TAG_CLASS
+                    Common.debugLog(TAG + TAG_CLASS
                             + "in inject touch events, can't get linearLayout");
                 }
             }
@@ -359,17 +359,17 @@ public class RecentTaskHook {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 // the touch listener is null??? any way, return
                 if (sTouchListener == null) {
-                    XposedBridge.log(TAG + TAG_CLASS + "EEROR, the touch listener is null");
+                    Common.debugLog(TAG + TAG_CLASS + "EEROR, the touch listener is null");
                     return;
                 }
                 // not the two finger click action, return
                 if (!sTouchListener.twoFingerClick) {
-                    XposedBridge.log(TAG + TAG_CLASS + "not two finger tap");
+                    Common.debugLog(TAG + TAG_CLASS + "not two finger tap");
                     return;
                 }
                 sTouchListener.twoFingerClick = false;
 
-                XposedBridge.log(TAG + TAG_CLASS + "playing in the two finger tap onClick");
+                Common.debugLog(TAG + TAG_CLASS + "playing in the two finger tap onClick");
 
                 final View thiz = (View) param.thisObject;
                 final View selectedView = (View) param.args[0];
@@ -378,10 +378,10 @@ public class RecentTaskHook {
 
                 // if the app is stock app, we should not go to plays
                 String pkgName = getPackageName(viewHolder);
-                XposedBridge.log(TAG + TAG_CLASS + "the package is : " + pkgName);
+                Common.debugLog(TAG + TAG_CLASS + "the package is : " + pkgName);
                 if (isAndroidStockApp(pkgName)) {
                     // stock app, show toast and do nothing
-                    XposedBridge.log(TAG + TAG_CLASS + "stock app");
+                    Common.debugLog(TAG + TAG_CLASS + "stock app");
                     Toast.makeText(thiz.getContext(), TEXT_STOCK_APP, Toast.LENGTH_SHORT).show();
                     param.setResult(null);
                     return;
@@ -429,7 +429,7 @@ public class RecentTaskHook {
     private static void closeRecentApps(View thiz) {
         // > 4.1
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            XposedBridge.log(TAG + TAG_CLASS + "call show, >4.1");
+            Common.debugLog(TAG + TAG_CLASS + "call show, >4.1");
             try {
                 // DO NOT use callMethod, it wouldn't catch anything here
                 thiz.getClass().getDeclaredMethod("show", boolean.class).invoke(thiz, false);
@@ -448,7 +448,7 @@ public class RecentTaskHook {
                 try {
                     Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_BACK);
                 } catch (Exception e) {
-                    XposedBridge.log(e);
+                    Common.debugLog(e);
                 }
             }
         }.start();*/
@@ -456,7 +456,7 @@ public class RecentTaskHook {
 
     // we use this method in the Status bar hook
     /* private */static void startApplicationDetailsActivity(Context ctx, String packageName) {
-        XposedBridge.log(TAG + TAG_CLASS + "start application details use my way");
+        Common.debugLog(TAG + TAG_CLASS + "start application details use my way");
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts(
                 "package", packageName, null));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -490,7 +490,7 @@ public class RecentTaskHook {
      */
     static boolean isAndroidStockApp(String pkgName) {
         if(pkgName == null){
-            XposedBridge.log(TAG + TAG_CLASS + "the package name is null, isAndroidStockApp");
+            Common.debugLog(TAG + TAG_CLASS + "the package name is null, isAndroidStockApp");
             return false;
         }
         // to lower case
@@ -515,7 +515,7 @@ public class RecentTaskHook {
      * @param packageName
      */
     static void viewInPlay(Context ctx, String packageName) {
-        XposedBridge.log(TAG + TAG_CLASS + "view in play : " + packageName);
+        Common.debugLog(TAG + TAG_CLASS + "view in play : " + packageName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
 //        intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
         // move to this, so can view in different app store
@@ -529,17 +529,17 @@ public class RecentTaskHook {
 
     private static void checkPlay(Context ctx, Intent intent) {
         List<ResolveInfo> list = ctx.getPackageManager().queryIntentActivities(intent, 0);
-        XposedBridge.log(TAG + TAG_CLASS + "directlyShowInPlay in check play : "
+        Common.debugLog(TAG + TAG_CLASS + "directlyShowInPlay in check play : "
                 + XposedInit.directlyShowInPlay);
         if (XposedInit.directlyShowInPlay) {
             String pkgName;
-            XposedBridge.log(TAG + TAG_CLASS + "size:" + list.size());
+            Common.debugLog(TAG + TAG_CLASS + "size:" + list.size());
             for (int i = 0; i < list.size(); i++) {
                 ActivityInfo info = list.get(i).activityInfo;
                 Common.debugLog(TAG + TAG_CLASS + "the package name is " + info.packageName);
                 pkgName = info.packageName;
                 if (pkgName.equals("com.android.vending")) {
-                    XposedBridge.log(TAG + TAG_CLASS + "we found it : " + pkgName);
+                    Common.debugLog(TAG + TAG_CLASS + "we found it : " + pkgName);
                     String appInfo = info.toString();
                     Common.debugLog(TAG + TAG_CLASS + "app info string : " + appInfo);
                     String activityName = appInfo.substring(
@@ -549,7 +549,7 @@ public class RecentTaskHook {
                     return;
                 }
             }
-            XposedBridge.log(TAG + TAG_CLASS + "no play here, pity");
+            Common.debugLog(TAG + TAG_CLASS + "no play here, pity");
             // if didn't find the Google Play Store, show the toast
             // TODO Toast may can not show by system, so we should do later
             // about it, maybe a broadcast instead
