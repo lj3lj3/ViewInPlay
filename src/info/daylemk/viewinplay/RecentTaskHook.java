@@ -46,6 +46,9 @@ public class RecentTaskHook {
     static String TEXT_REMOVE_FROM_LIST;
     // the string of remove from list read from android
     static String TEXT_REMOVE_FROM_LIST_STOCK = null;
+    static String TEXT_LAUNCH_FLOATING = null;
+    // the string of launch floating read from android
+    static String TEXT_LAUNCH_FLOATING_STOCK = null;
     static String TEXT_VIEW_IN_PLAY;
     static String TEXT_NO_PLAY;
     static String TEXT_STOCK_APP;
@@ -53,13 +56,16 @@ public class RecentTaskHook {
 
     static int ID_REMOVE_FROM_LIST = 1000;
     static int ID_APP_INFO = 2000;
+    static int ID_LAUNCH_FLOATING = 3000;
     // re-open it
-    static final int ID_OPEN_IN_XHALO = 3000;
-    static final int ID_VIEW_IN_PLAY = 4000;
+    static final int ID_OPEN_IN_XHALO = 9999;
+    static final int ID_VIEW_IN_PLAY = 9998;
 
     private static RecentsOnTouchLis sTouchListener;
 
     private static boolean bool_compat_xhalo = false;
+    // the compat for the PA floating mode
+    private static boolean bool_compat_floating = false;
 
     // 0 is a better choice
     private static int id_app_thumbnail = 0;
@@ -67,6 +73,8 @@ public class RecentTaskHook {
 
     private static int recentRemoveItemId = 0;
     private static int inspectItemId = 0;
+    // added PA floating mode
+    private static int floatingItemId = 0;
 
     public static void initZygote(XModuleResources module_res) {
         TEXT_APP_INFO = module_res.getString(R.string.recents_app_info);
@@ -76,6 +84,7 @@ public class RecentTaskHook {
         TEXT_VIEW_IN_PLAY = module_res.getString(R.string.view_in_play);
         TEXT_NO_PLAY = module_res.getString(R.string.no_play_on_the_phone);
         TEXT_STOCK_APP = module_res.getString(R.string.stock_app);
+        TEXT_LAUNCH_FLOATING = module_res.getString(R.string.recents_launch_floating);
         // TEXT_CANT_OPEN_IN_XHALO =
         // module_res.getString(R.string.cant_open_in_xhalo);
     }
@@ -106,6 +115,9 @@ public class RecentTaskHook {
 
         bool_compat_xhalo = pref.getBoolean(XposedInit.KEY_COMPAT_XHALO,
                 Common.DEFAULT_COMPAT_XHALO);
+        // PA floating mode
+        bool_compat_floating = pref.getBoolean(XposedInit.KEY_COMPAT_FLOATING,
+                Common.DEFAULT_COMPAT_FLOATING);
 
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_RECENT_PANEL,
                 Common.DEFAULT_SHOW_IN_RECENT_PANEL)) {
@@ -159,6 +171,16 @@ public class RecentTaskHook {
                     ID_APP_INFO = inspectItemId;
                 }
 
+                if (floatingItemId == 0) {
+                    floatingItemId = res.getIdentifier("recent_launch_floating", "id",
+                            "com.android.systemui");
+                }
+                XposedBridge
+                        .log(TAG + TAG_CLASS + "the recent floating menu id is " + floatingItemId);
+                if (floatingItemId != 0) {
+                    ID_LAUNCH_FLOATING = floatingItemId;
+                }
+
                 PopupMenu mPopupMenu = new PopupMenu(thiz.getContext(),
                         anchorView == null ? selectedView : anchorView);
 
@@ -171,7 +193,6 @@ public class RecentTaskHook {
                 if (popupMenuId == 0) {
                     if (TEXT_REMOVE_FROM_LIST_STOCK == null || TEXT_APP_INFO_STOCK == null) {
 
-                        boolean exceptted = false;
                         try {
                             TEXT_REMOVE_FROM_LIST_STOCK = res.getString(res.getIdentifier(
                                     "status_bar_recent_remove_item_title", "string",
@@ -179,9 +200,12 @@ public class RecentTaskHook {
                             TEXT_APP_INFO_STOCK = res.getString(res.getIdentifier(
                                     "status_bar_recent_inspect_item_title", "string",
                                     "com.android.systemui"));
+                            // added PA floating mode
+                            TEXT_LAUNCH_FLOATING_STOCK = res.getString(res.getIdentifier(
+                                    "status_bar_recent_floating_item_title", "string",
+                                    "com.android.systemui"));
                         } catch (Exception e) {
                             Common.debugLog(TAG + TAG_CLASS + "can't get the text of stock text");
-                            exceptted = true;
                         }
 
                         // if we have exception here
@@ -189,14 +213,27 @@ public class RecentTaskHook {
                         // if the text is empty
                         // in these conditions, we all needs set the text to the
                         // default
-                        if (exceptted || TEXT_REMOVE_FROM_LIST_STOCK == null
-                                || TEXT_APP_INFO_STOCK == null
-                                || TEXT_REMOVE_FROM_LIST_STOCK.equals("")
-                                || TEXT_APP_INFO_STOCK.equals("")) {
-                            Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
+
+                        // if we set some text to the default
+                        boolean isSet = false;
+                        if (TEXT_REMOVE_FROM_LIST_STOCK == null
+                                || TEXT_REMOVE_FROM_LIST_STOCK.equals("")) {
                             TEXT_REMOVE_FROM_LIST_STOCK = TEXT_REMOVE_FROM_LIST;
+                            Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
+                            isSet = true;
+                        }
+                        if (TEXT_APP_INFO_STOCK == null || TEXT_APP_INFO_STOCK.equals("")) {
                             TEXT_APP_INFO_STOCK = TEXT_APP_INFO;
-                        } else {
+                            Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
+                            isSet = true;
+                        }
+                        if (TEXT_LAUNCH_FLOATING_STOCK == null
+                                || TEXT_LAUNCH_FLOATING_STOCK.equals("")) {
+                            TEXT_LAUNCH_FLOATING_STOCK = TEXT_LAUNCH_FLOATING;
+                            Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
+                            isSet = true;
+                        }
+                        if (!isSet) {
                             Common.debugLog(TAG + TAG_CLASS + "got the text");
                         }
                     }
@@ -204,6 +241,13 @@ public class RecentTaskHook {
                     mPopupMenu.getMenu().add(Menu.NONE, ID_REMOVE_FROM_LIST, 1,
                             TEXT_REMOVE_FROM_LIST_STOCK);
                     mPopupMenu.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO_STOCK);
+                    // the PA floating compatibility is only available on the PA
+                    // ROM
+                    if (bool_compat_floating) {
+                        Common.debugLog(TAG + TAG_CLASS + "the PA floating compatibility");
+                        mPopupMenu.getMenu().add(Menu.NONE, ID_LAUNCH_FLOATING, 5,
+                                TEXT_LAUNCH_FLOATING);
+                    }
                 } else {
                     mPopupMenu.getMenuInflater().inflate(
                             popupMenuId,
@@ -257,11 +301,7 @@ public class RecentTaskHook {
                             } else if (itemId == ID_OPEN_IN_XHALO) {
                                 if (viewHolder != null) {
                                     closeRecentApps(thiz);
-                                    Object ad = viewHolder.getClass()
-                                            .getDeclaredField("taskDescription")
-                                            .get(viewHolder);
-                                    Intent intent = (Intent) ad.getClass()
-                                            .getDeclaredField("intent").get(ad);
+                                    Intent intent = getIntentFromViewHolder(viewHolder);
                                     intent.addFlags(Common.FLAG_FLOATING_WINDOW
                                             | Intent.FLAG_ACTIVITY_MULTIPLE_TASK
                                             | Intent.FLAG_ACTIVITY_NO_USER_ACTION
@@ -275,6 +315,14 @@ public class RecentTaskHook {
                                     viewInPlay(thiz.getContext(), getPackageName(viewHolder));
                                 }
                                 return true;
+                            } else if (itemId == ID_LAUNCH_FLOATING) {
+                                if (viewHolder != null) {
+                                    closeRecentApps(thiz);
+                                    Intent intent = getIntentFromViewHolder(viewHolder);
+                                    intent.setFlags(Common.FLAG_FLOATING_WINDOW
+                                            | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    thiz.getContext().startActivity(intent);
+                                }
                             }
                         } catch (Throwable t) {
                             Common.debugLog(Common.LOG_TAG);
@@ -433,7 +481,7 @@ public class RecentTaskHook {
             try {
                 // DO NOT use callMethod, it wouldn't catch anything here
                 thiz.getClass().getDeclaredMethod("show", boolean.class).invoke(thiz, false);
-                //XposedHelpers.callMethod(thiz, "dismissAndGoBack");
+                // XposedHelpers.callMethod(thiz, "dismissAndGoBack");
                 return;
             } catch (Exception e) {
                 XposedBridge.log(e);
@@ -442,16 +490,12 @@ public class RecentTaskHook {
         // 4.1
         StatusBarHook.collapseStatusBarPanel();
 
-        /*new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_BACK);
-                } catch (Exception e) {
-                    Common.debugLog(e);
-                }
-            }
-        }.start();*/
+        /*
+         * new Thread() {
+         * @Override public void run() { try {
+         * Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+         * } catch (Exception e) { Common.debugLog(e); } } }.start();
+         */
     }
 
     // we use this method in the Status bar hook
@@ -482,14 +526,36 @@ public class RecentTaskHook {
         return pkg_name;
     }
 
+    private static Intent getIntentFromViewHolder(Object viewHolder) {
+        Object ad;
+        try {
+            ad = viewHolder.getClass()
+                    .getDeclaredField("taskDescription")
+                    .get(viewHolder);
+            return (Intent) ad.getClass()
+                    .getDeclaredField("intent").get(ad);
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Common.debugLog(TAG + TAG_CLASS + "get intent error");
+        return new Intent();
+    }
+
     /**
-     * check if the package is the stock app or not
-     * added : Null check
+     * check if the package is the stock app or not added : Null check
+     * 
      * @param pkgName
      * @return
      */
     static boolean isAndroidStockApp(String pkgName) {
-        if(pkgName == null){
+        if (pkgName == null) {
             Common.debugLog(TAG + TAG_CLASS + "the package name is null, isAndroidStockApp");
             return false;
         }
@@ -517,7 +583,8 @@ public class RecentTaskHook {
     static void viewInPlay(Context ctx, String packageName) {
         Common.debugLog(TAG + TAG_CLASS + "view in play : " + packageName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + packageName));
+        // intent.setData(Uri.parse("http://play.google.com/store/apps/details?id="
+        // + packageName));
         // move to this, so can view in different app store
         intent.setData(Uri.parse("market://details?id=" + packageName));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);

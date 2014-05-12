@@ -26,6 +26,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     static String KEY_SHOW_IN_NOTIFICATION;
     static String KEY_TWO_FINGER_IN_RECENT_PANEL;
     static String KEY_COMPAT_XHALO;
+    static String KEY_COMPAT_FLOATING;
     // add for debug
     static String KEY_DEBUG_LOGS;
     static boolean directlyShowInPlay = false;
@@ -50,6 +51,7 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         KEY_SHOW_IN_NOTIFICATION = sModRes.getString(R.string.key_show_in_notification);
         KEY_TWO_FINGER_IN_RECENT_PANEL = sModRes.getString(R.string.key_two_finger_in_recent_panel);
         KEY_COMPAT_XHALO = sModRes.getString(R.string.key_compat_xhalo);
+        KEY_COMPAT_FLOATING = sModRes.getString(R.string.key_compat_floating);
         KEY_DEBUG_LOGS = sModRes.getString(R.string.key_debug_logs);
 
         notStockApp = Arrays.asList(sModRes.getStringArray(R.array.not_stock_app));

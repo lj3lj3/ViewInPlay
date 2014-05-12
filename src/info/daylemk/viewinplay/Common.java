@@ -22,10 +22,14 @@ public class Common {
     public static final boolean DEFAULT_TWO_FINGER_IN_RECENT_PANEL = false;
     // halo
     public static final boolean DEFAULT_COMPAT_XHALO = false;
+    // PA floating
+    public static final boolean DEFAULT_COMPAT_FLOATING = false;
+    
     public static final boolean DEFAULT_DIRECTLY_SHOW_IN_PLAY = false;
     public static final boolean DEFAULT_DEBUG_LOGS = false;
 
     // for open in halo
+    // edit:also in PA new floating mode
     public static final int FLAG_FLOATING_WINDOW = 0x00002000;
 
     public static final String LOG_TAG = "ViewInPlay(SDK: " + Build.VERSION.SDK_INT + ") - ";

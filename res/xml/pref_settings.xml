@@ -50,6 +50,11 @@
             android:defaultValue="false"
             android:key="@string/key_compat_xhalo"
             android:title="@string/pref_title_compat_xhalo" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/key_compat_floating"
+            android:title="@string/pref_title_compat_floating"
+            android:summary="@string/pref_summary_compat_floating" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_title_note" >
         <Preference
