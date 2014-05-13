@@ -1,6 +1,7 @@
 
 package info.daylemk.viewinplay;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
@@ -15,6 +16,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class StatusBarHook {
@@ -23,6 +25,8 @@ public class StatusBarHook {
 
     private static int popupMenuId = 0;
     private static int inspectItemId = 0;
+    // added PA floating mode
+    private static int floatingItemId = 0;
     private static Object statusBar;
 
     public static void handleLoadPackage(final LoadPackageParam lpp, final XSharedPreferences pref) {
@@ -88,11 +92,43 @@ public class StatusBarHook {
                             "com.android.systemui");
                 }
                 Common.debugLog(TAG + TAG_CLASS + "the inspect menu id is " + inspectItemId);
+                // added PA floating mode'
+                // MOD always get the id
+                if (floatingItemId == 0) {
+                    floatingItemId = res.getIdentifier("notification_floating_item", "id",
+                            "com.android.systemui");
+                }
+                Common.debugLog(TAG + TAG_CLASS + "the floating menu id is " + floatingItemId);
 
                 View.OnLongClickListener listerner = new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        final String packageNameF = (String) v.getTag();
+                        Object tag = v.getTag();
+                        String pkgNameF = null;
+                        PendingIntent contentIntentF = null;
+                        if (tag instanceof String) {
+                            pkgNameF = (String) v.getTag();
+                        } else {
+                            Common.debugLog(TAG + TAG_CLASS + "PA mode");
+                            // PA new floating mode, NotificationData.Entry
+                            try {
+                                Object sbn = tag.getClass().getDeclaredField("notification")
+                                        .get(tag);
+                                pkgNameF = (String) sbn.getClass()
+                                        .getDeclaredMethod("getPackageName").invoke(sbn);
+                                Object notifi = sbn.getClass().getDeclaredMethod("getNotification")
+                                        .invoke(sbn);
+                                contentIntentF = (PendingIntent) notifi.getClass()
+                                        .getDeclaredField("contentIntent").get(notifi);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Common.debugLog(e.toString());
+                            }
+                        }
+
+                        final PendingIntent contentIntent = contentIntentF;
+                        final String packageNameF = pkgNameF;
+
                         if (packageNameF == null)
                             return false;
                         if (v.getWindowToken() == null)
@@ -107,6 +143,14 @@ public class StatusBarHook {
                             Common.debugLog(TAG + TAG_CLASS + "the popup menu id is 0 ???");
                             mPopupMenu.getMenu().add(Menu.NONE, RecentTaskHook.ID_APP_INFO, 1,
                                     RecentTaskHook.TEXT_APP_INFO);
+                            // added PA floating mode, also available with stock
+                            // APP
+                            // TODO get the stock text here
+                            if (XposedInit.bool_compat_floating) {
+                                mPopupMenu.getMenu().add(Menu.NONE,
+                                        RecentTaskHook.ID_LAUNCH_FLOATING, 5,
+                                        RecentTaskHook.TEXT_LAUNCH_FLOATING);
+                            }
                         }
                         // if it's the android stock app, let's do nothing
                         if (!RecentTaskHook.isAndroidStockApp(packageNameF)) {
@@ -150,6 +194,36 @@ public class StatusBarHook {
                                             RecentTaskHook.viewInPlay(mContext, packageNameF);
                                             collapsePanels(thiz);
                                             return true;
+                                        } else if (itemId == floatingItemId) {
+                                            if (contentIntent == null) {
+                                                Common.debugLog(TAG + TAG_CLASS
+                                                        + "the content intent is null??? ");
+                                                return false;
+                                            }
+                                            try {
+                                                Method method = thiz.getClass().getSuperclass()
+                                                        .getDeclaredMethod("launchFloating",
+                                                                PendingIntent.class);
+                                                method.setAccessible(true);
+                                                method.invoke(thiz, contentIntent);
+                                            } catch (IllegalAccessException e) {
+                                                // TODO Auto-generated catch
+                                                // block
+                                                e.printStackTrace();
+                                            } catch (IllegalArgumentException e) {
+                                                // TODO Auto-generated catch
+                                                // block
+                                                e.printStackTrace();
+                                            } catch (InvocationTargetException e) {
+                                                // TODO Auto-generated catch
+                                                // block
+                                                e.printStackTrace();
+                                            } catch (NoSuchMethodException e) {
+                                                // TODO Auto-generated catch
+                                                // block
+                                                e.printStackTrace();
+                                            }
+                                            collapsePanels(thiz);
                                         }
                                         Common.debugLog(TAG + TAG_CLASS + "not handled click : "
                                                 + itemId);
@@ -179,7 +253,7 @@ public class StatusBarHook {
             Common.debugLog(TAG + TAG_CLASS + "thiz : " + thiz + ", > 4.1");
             try {
                 // should fix SystemUI crash on < 4.2 version
-                // 'cause can' catch any exception here
+                // 'cause can't catch any exception here
                 collapsePanel = thiz.getClass().getDeclaredMethod("animateCollapsePanels");
                 collapsePanel.setAccessible(true);
                 collapsePanel.invoke(thiz);

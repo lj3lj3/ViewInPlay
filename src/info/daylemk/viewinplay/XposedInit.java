@@ -31,6 +31,8 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     static String KEY_DEBUG_LOGS;
     static boolean directlyShowInPlay = false;
     static boolean debuggable = false;
+    // the compat for the PA floating mode
+    static boolean bool_compat_floating = false;
 
     private static List<String> notStockApp;
     private static List<String> stockAndroidApp;
@@ -78,15 +80,22 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
                 && !lpparam.packageName.equals("com.android.settings"))
             return;
 
-
         mPref.reload();
         directlyShowInPlay = mPref.getBoolean(KEY_DIRECTLY_SHOW_IN_PLAY,
                 Common.DEFAULT_DIRECTLY_SHOW_IN_PLAY);
         // debug
         debuggable = mPref.getBoolean(KEY_DEBUG_LOGS, Common.DEFAULT_DEBUG_LOGS);
-
+        
         Common.debugLog(TAG + "[]lpparam.packageName:" + lpparam.packageName);
         Common.debugLog(TAG + "[]the directly is " + directlyShowInPlay);
+        
+        // if we are in the settings process, return, no need to get floating mode
+        if (lpparam.packageName.equals("com.android.settings")) {
+            return;
+        }
+        // PA floating mode
+        bool_compat_floating = mPref.getBoolean(XposedInit.KEY_COMPAT_FLOATING,
+                Common.DEFAULT_COMPAT_FLOATING);
     }
 
     @Override

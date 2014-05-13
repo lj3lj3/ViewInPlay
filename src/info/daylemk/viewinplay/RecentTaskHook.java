@@ -64,8 +64,6 @@ public class RecentTaskHook {
     private static RecentsOnTouchLis sTouchListener;
 
     private static boolean bool_compat_xhalo = false;
-    // the compat for the PA floating mode
-    private static boolean bool_compat_floating = false;
 
     // 0 is a better choice
     private static int id_app_thumbnail = 0;
@@ -115,9 +113,6 @@ public class RecentTaskHook {
 
         bool_compat_xhalo = pref.getBoolean(XposedInit.KEY_COMPAT_XHALO,
                 Common.DEFAULT_COMPAT_XHALO);
-        // PA floating mode
-        bool_compat_floating = pref.getBoolean(XposedInit.KEY_COMPAT_FLOATING,
-                Common.DEFAULT_COMPAT_FLOATING);
 
         if (pref.getBoolean(XposedInit.KEY_SHOW_IN_RECENT_PANEL,
                 Common.DEFAULT_SHOW_IN_RECENT_PANEL)) {
@@ -171,12 +166,15 @@ public class RecentTaskHook {
                     ID_APP_INFO = inspectItemId;
                 }
 
+                // PA floating
+                // MOD, always get the it
                 if (floatingItemId == 0) {
                     floatingItemId = res.getIdentifier("recent_launch_floating", "id",
                             "com.android.systemui");
                 }
                 XposedBridge
-                        .log(TAG + TAG_CLASS + "the recent floating menu id is " + floatingItemId);
+                        .log(TAG + TAG_CLASS + "the recent floating menu id is "
+                                + floatingItemId);
                 if (floatingItemId != 0) {
                     ID_LAUNCH_FLOATING = floatingItemId;
                 }
@@ -201,9 +199,11 @@ public class RecentTaskHook {
                                     "status_bar_recent_inspect_item_title", "string",
                                     "com.android.systemui"));
                             // added PA floating mode
-                            TEXT_LAUNCH_FLOATING_STOCK = res.getString(res.getIdentifier(
-                                    "status_bar_recent_floating_item_title", "string",
-                                    "com.android.systemui"));
+                            if (XposedInit.bool_compat_floating) {
+                                TEXT_LAUNCH_FLOATING_STOCK = res.getString(res.getIdentifier(
+                                        "status_bar_recent_floating_item_title", "string",
+                                        "com.android.systemui"));
+                            }
                         } catch (Exception e) {
                             Common.debugLog(TAG + TAG_CLASS + "can't get the text of stock text");
                         }
@@ -227,12 +227,15 @@ public class RecentTaskHook {
                             Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
                             isSet = true;
                         }
+                        // PA floating
+                        // MOD, always
                         if (TEXT_LAUNCH_FLOATING_STOCK == null
                                 || TEXT_LAUNCH_FLOATING_STOCK.equals("")) {
                             TEXT_LAUNCH_FLOATING_STOCK = TEXT_LAUNCH_FLOATING;
                             Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
                             isSet = true;
                         }
+                        
                         if (!isSet) {
                             Common.debugLog(TAG + TAG_CLASS + "got the text");
                         }
@@ -243,7 +246,7 @@ public class RecentTaskHook {
                     mPopupMenu.getMenu().add(Menu.NONE, ID_APP_INFO, 2, TEXT_APP_INFO_STOCK);
                     // the PA floating compatibility is only available on the PA
                     // ROM
-                    if (bool_compat_floating) {
+                    if (XposedInit.bool_compat_floating) {
                         Common.debugLog(TAG + TAG_CLASS + "the PA floating compatibility");
                         mPopupMenu.getMenu().add(Menu.NONE, ID_LAUNCH_FLOATING, 5,
                                 TEXT_LAUNCH_FLOATING);

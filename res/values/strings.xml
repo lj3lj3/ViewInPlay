@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- delete these lines in your language file __begin -->
-	<string name="version">1.0.6</string>
+	<string name="version">1.0.7</string>
 	<!-- delete these lines in your language file __end -->
 	<string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
@@ -46,8 +46,8 @@
     <string name="pref_title_compatibility">Compatibility</string>
     <string name="pref_title_compat_xhalo">XHaloWindow</string>
     <string name="pref_summary_compat_xhalo">XHaloWindow</string>
-    <string name="pref_title_compat_floating">PA Floating mode</string>
-    <string name="pref_summary_compat_floating">only availbile on the new PA ROM</string>
+    <string name="pref_title_compat_floating">new PA Floating mode</string>
+    <string name="pref_summary_compat_floating">Force add floating mode menu, in case for the default implemnts not working, no need check this in most situation.</string>
     <string name="pref_title_note">Note</string>
     <!-- this may be edited often -->
     <string name="pref_summary_note">After change or upgrade, Please reboot your phone</string>
