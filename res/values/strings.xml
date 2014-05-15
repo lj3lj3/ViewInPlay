@@ -21,6 +21,7 @@
     <string name="key_two_finger_in_recent_panel">double_in_recent_panel</string>
     <string name="key_show_in_notification">show_in_notification</string>
     <string name="key_directly_show_in_play">directly_show_in_play</string>
+    <string name="key_use_browser">use_browser</string>
     <string name="key_compat_xhalo">compat_xhalo</string>
     <string name="key_compat_floating">compat_floating</string>
     <string name="key_pref_layout">key_pref_layout</string>
@@ -43,6 +44,9 @@
     <string name="pref_title_directly_view_in_play">Directly view in the Play Store</string>
     <string name="pref_summary_directly_view_in_play_on">directly view in the Play Store, not show the app chooser screen</string>
     <string name="pref_summary_directly_view_in_play_off">will show the app choose screen, let you to choose which app to handle the action</string>
+    <string name="pref_title_use_browser">Show browsers in the app chooser</string>
+    <string name="pref_summary_use_browser_on">"all browsers will show in the app chooser, so you can choose browser instead of store app (please make sure 'Directly view in play' not checked, so there will be a app chooser when you click 'view in play' menu)"</string>
+    <string name="pref_summary_use_browser_off">just show all the stores in the app chooser, browsers not included</string>
     <string name="pref_title_compatibility">Compatibility</string>
     <string name="pref_title_compat_xhalo">XHaloWindow</string>
     <string name="pref_summary_compat_xhalo">XHaloWindow</string>

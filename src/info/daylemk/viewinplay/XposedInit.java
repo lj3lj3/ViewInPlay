@@ -14,6 +14,12 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 
+ * @author DayLemK Liu
+ *  @todo 1. an option to toggle Store and Browser </br>
+ *        2. an option to switch 'Remove from list' to 'Force Stop'
+ */
 public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit,
         IXposedHookInitPackageResources {
     private static final String TAG = "DayL";
@@ -29,7 +35,12 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
     static String KEY_COMPAT_FLOATING;
     // add for debug
     static String KEY_DEBUG_LOGS;
+    // add for browser-store switch
+    static String KEY_USE_BROWSER;
+    
     static boolean directlyShowInPlay = false;
+    // add for browser-store switch
+    static boolean useBrowser = false;
     static boolean debuggable = false;
     // the compat for the PA floating mode
     static boolean bool_compat_floating = false;
@@ -55,6 +66,8 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         KEY_COMPAT_XHALO = sModRes.getString(R.string.key_compat_xhalo);
         KEY_COMPAT_FLOATING = sModRes.getString(R.string.key_compat_floating);
         KEY_DEBUG_LOGS = sModRes.getString(R.string.key_debug_logs);
+        // add for browser-store switch 
+        KEY_USE_BROWSER = sModRes.getString(R.string.key_use_browser);
 
         notStockApp = Arrays.asList(sModRes.getStringArray(R.array.not_stock_app));
         stockAndroidApp = Arrays.asList(sModRes.getStringArray(R.array.stock_android_app));
@@ -83,6 +96,8 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
         mPref.reload();
         directlyShowInPlay = mPref.getBoolean(KEY_DIRECTLY_SHOW_IN_PLAY,
                 Common.DEFAULT_DIRECTLY_SHOW_IN_PLAY);
+        // add for browser-store switch
+        useBrowser = mPref.getBoolean(KEY_USE_BROWSER, Common.DEFAULT_USE_BROWSER);
         // debug
         debuggable = mPref.getBoolean(KEY_DEBUG_LOGS, Common.DEFAULT_DEBUG_LOGS);
         

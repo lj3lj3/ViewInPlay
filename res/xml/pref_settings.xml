@@ -36,6 +36,13 @@
             android:title="@string/pref_title_directly_view_in_play" />
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="@string/key_use_browser"
+            android:summaryOff="@string/pref_summary_use_browser_off"
+            android:summaryOn="@string/pref_summary_use_browser_on"
+            android:title="@string/pref_title_use_browser" 
+            />
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/key_hide_icon"
             android:summaryOff="@string/pref_summary_hide_icon_off"
             android:summaryOn="@string/pref_summary_hide_icon_on"

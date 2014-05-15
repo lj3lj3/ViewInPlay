@@ -235,7 +235,7 @@ public class RecentTaskHook {
                             Common.debugLog(TAG + TAG_CLASS + "set the text to the default ");
                             isSet = true;
                         }
-                        
+
                         if (!isSet) {
                             Common.debugLog(TAG + TAG_CLASS + "got the text");
                         }
@@ -586,10 +586,15 @@ public class RecentTaskHook {
     static void viewInPlay(Context ctx, String packageName) {
         Common.debugLog(TAG + TAG_CLASS + "view in play : " + packageName);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        // intent.setData(Uri.parse("http://play.google.com/store/apps/details?id="
-        // + packageName));
-        // move to this, so can view in different app store
-        intent.setData(Uri.parse("market://details?id=" + packageName));
+        Common.debugLog(TAG + TAG_CLASS + "use browser : " + XposedInit.useBrowser);
+        // add browser-store switch
+        if (XposedInit.useBrowser) {
+            intent.setData(Uri.parse("http://play.google.com/store/apps/details?id="
+                    + packageName));
+        } else {
+            // move to this, so can view in different app store
+            intent.setData(Uri.parse("market://details?id=" + packageName));
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
 
         checkPlay(ctx, intent);

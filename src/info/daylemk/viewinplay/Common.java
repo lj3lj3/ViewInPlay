@@ -26,6 +26,8 @@ public class Common {
     public static final boolean DEFAULT_COMPAT_FLOATING = false;
     
     public static final boolean DEFAULT_DIRECTLY_SHOW_IN_PLAY = false;
+    // browser-store swtich
+    public static final boolean DEFAULT_USE_BROWSER = false;
     public static final boolean DEFAULT_DEBUG_LOGS = false;
 
     // for open in halo
