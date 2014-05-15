@@ -230,7 +230,7 @@ public class StatusBarHook {
                                         return false;
                                     }
                                 });
-                        // don't forget to set the pupop menu back
+                        // don't forget to set the popup menu back
                         XposedHelpers.setObjectField(thiz, "mNotificationBlamePopup", mPopupMenu);
                         mPopupMenu.show();
                         return true;

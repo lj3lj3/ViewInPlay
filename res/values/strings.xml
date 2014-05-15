@@ -29,7 +29,7 @@
     <!-- delete these lines in your language file __end -->
 
     <string name="pref_title_show_in_recent_panel">Show in recent panel</string>
-    <string name="pref_summary_show_in_recent_panel_on">"the 'view in play' menu will show in the long press pupop menu in the recent task panel"</string>
+    <string name="pref_summary_show_in_recent_panel_on">"the 'view in play' menu will show in the long press popup menu in the recent task panel"</string>
     <string name="pref_summary_show_in_recent_panel_off">"enable this option will add a 'view in play' menu in the recent task long press popup menu"</string>
     <string name="pref_title_show_in_app_info">Show in app info screen</string>
     <string name="pref_summary_show_in_app_info_on">"the 'view in play' menu will show in the app info screen"</string>
@@ -38,7 +38,7 @@
     <string name="pref_summary_two_finger_in_recent_panel_on">"use two fingers tap the recent task thumbnail in the recent task panel to go to the Play Store"</string>
     <string name="pref_summary_two_finger_in_recent_panel_off">"enable this option will let you use two-finger-tap the recent task thumbnail to go to the Play Store"</string>
     <string name="pref_title_show_in_notification">Show in Notification popup menu</string>
-    <string name="pref_summary_show_in_notification_on">"the 'view in play' menu will show in the long press pupop menu upon the notification"</string>
+    <string name="pref_summary_show_in_notification_on">"the 'view in play' menu will show in the long press popup menu upon the notification"</string>
     <string name="pref_summary_show_in_notification_off">"enable this option will add a 'view in play' menu in the notification long press popup menu"</string>
     <string name="pref_title_directly_view_in_play">Directly view in the Play Store</string>
     <string name="pref_summary_directly_view_in_play_on">directly view in the Play Store, not show the app chooser screen</string>
@@ -47,7 +47,7 @@
     <string name="pref_title_compat_xhalo">XHaloWindow</string>
     <string name="pref_summary_compat_xhalo">XHaloWindow</string>
     <string name="pref_title_compat_floating">new PA Floating mode</string>
-    <string name="pref_summary_compat_floating">Force add floating mode menu, in case for the default implemnts not working, no need check this in most situation.</string>
+    <string name="pref_summary_compat_floating">Force add floating mode menu, in case for the default implements not working, no need check this in most situation.</string>
     <string name="pref_title_note">Note</string>
     <!-- this may be edited often -->
     <string name="pref_summary_note">After change or upgrade, Please reboot your phone</string>
