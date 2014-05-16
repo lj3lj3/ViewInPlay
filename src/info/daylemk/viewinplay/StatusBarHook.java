@@ -16,6 +16,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -112,14 +113,21 @@ public class StatusBarHook {
                             Common.debugLog(TAG + TAG_CLASS + "PA mode");
                             // PA new floating mode, NotificationData.Entry
                             try {
-                                Object sbn = tag.getClass().getDeclaredField("notification")
-                                        .get(tag);
-                                pkgNameF = (String) sbn.getClass()
-                                        .getDeclaredMethod("getPackageName").invoke(sbn);
-                                Object notifi = sbn.getClass().getDeclaredMethod("getNotification")
-                                        .invoke(sbn);
-                                contentIntentF = (PendingIntent) notifi.getClass()
-                                        .getDeclaredField("contentIntent").get(notifi);
+                                Field fieldNoti = tag.getClass().getDeclaredField("notification");
+                                fieldNoti.setAccessible(true);
+                                Object sbn = fieldNoti.get(tag);
+                                
+                                Method methodGPN = sbn.getClass().getDeclaredMethod("getPackageName");
+                                methodGPN.setAccessible(true);
+                                pkgNameF = (String) methodGPN.invoke(sbn);
+                                
+                                Method methodGNoti = sbn.getClass().getDeclaredMethod("getNotification"); 
+                                methodGNoti.setAccessible(true);
+                                Object notifi = methodGNoti.invoke(sbn);
+                                
+                                Field fieldCI = notifi.getClass().getDeclaredField("contentIntent");
+                                fieldCI.setAccessible(true);
+                                contentIntentF = (PendingIntent) fieldCI.get(notifi);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Common.debugLog(e.toString());
@@ -207,20 +215,12 @@ public class StatusBarHook {
                                                 method.setAccessible(true);
                                                 method.invoke(thiz, contentIntent);
                                             } catch (IllegalAccessException e) {
-                                                // TODO Auto-generated catch
-                                                // block
                                                 e.printStackTrace();
                                             } catch (IllegalArgumentException e) {
-                                                // TODO Auto-generated catch
-                                                // block
                                                 e.printStackTrace();
                                             } catch (InvocationTargetException e) {
-                                                // TODO Auto-generated catch
-                                                // block
                                                 e.printStackTrace();
                                             } catch (NoSuchMethodException e) {
-                                                // TODO Auto-generated catch
-                                                // block
                                                 e.printStackTrace();
                                             }
                                             collapsePanels(thiz);

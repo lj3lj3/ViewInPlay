@@ -28,6 +28,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
@@ -269,7 +270,7 @@ public class RecentTaskHook {
 
                 try {
                     XposedHelpers.setObjectField(thiz, "mPopup", mPopupMenu);
-                    // thiz.getClass().getDeclaredField("mPopup").set(thiz,
+                    // thiz.getClass().getDeclared!1Field("mPopup").set(thiz,
                     // popup);
                 } catch (Exception e) {
                     // User on ICS
@@ -281,8 +282,9 @@ public class RecentTaskHook {
                         Common.debugLog(TAG + TAG_CLASS + "item clicked : " + itemId);
                         try {
                             if (itemId == ID_REMOVE_FROM_LIST) {
-                                ViewGroup recentsContainer = (ViewGroup) hookClass
-                                        .getDeclaredField("mRecentsContainer").get(thiz);
+                                Field filedRC = hookClass.getDeclaredField("mRecentsContainer");
+                                filedRC.setAccessible(true);
+                                ViewGroup recentsContainer = (ViewGroup) filedRC.get(thiz);
                                 recentsContainer.removeViewInLayout(selectedView);
                                 return true;
                             } else if (itemId == ID_APP_INFO) {
@@ -340,7 +342,7 @@ public class RecentTaskHook {
                         thumbnailView.setSelected(false);
                         try {
                             XposedHelpers.setObjectField(thiz, "mPopup", null);
-                            // thiz.getClass().getDeclaredField("mPopup").set(thiz,
+                            // thiz.getClass().getDeclared!1Field("mPopup").set(thiz,
                             // null);
                         } catch (Exception e) {
                             // User on ICS
@@ -372,8 +374,9 @@ public class RecentTaskHook {
 
                 LinearLayout mLinearLayout = null;
                 try {
-                    mLinearLayout = (LinearLayout) thiz.getClass()
-                            .getDeclaredField("mLinearLayout").get(thiz);
+                    Field fieldLL = thiz.getClass().getDeclaredField("mLinearLayout");
+                    fieldLL.setAccessible(true);
+                    mLinearLayout = (LinearLayout) fieldLL.get(thiz);
                 } catch (Exception e) {
                     XposedBridge
                             .log(TAG + TAG_CLASS
@@ -440,11 +443,11 @@ public class RecentTaskHook {
 
                 closeRecentApps(thiz);
                 // Object ad = viewHolder.getClass()
-                // .getDeclaredField("taskDescription")
+                // .getDeclared!1Field("taskDescription")
                 // .get(viewHolder);
                 // String pkg_name = (String)
                 // ad.getClass()
-                // .getDeclaredField("packageName").get(ad);
+                // .getDeclared!1Field("packageName").get(ad);
                 viewInPlay(thiz.getContext(), getPackageName(viewHolder));
 
                 param.setResult(null);
@@ -483,7 +486,9 @@ public class RecentTaskHook {
             Common.debugLog(TAG + TAG_CLASS + "call show, >4.1");
             try {
                 // DO NOT use callMethod, it wouldn't catch anything here
-                thiz.getClass().getDeclaredMethod("show", boolean.class).invoke(thiz, false);
+                Method methodShow = thiz.getClass().getDeclaredMethod("show", boolean.class);
+                methodShow.setAccessible(true);
+                methodShow.invoke(thiz, false);
                 // XposedHelpers.callMethod(thiz, "dismissAndGoBack");
                 return;
             } catch (Exception e) {
@@ -520,11 +525,14 @@ public class RecentTaskHook {
     private static String getPackageName(final Object viewHolder) throws Throwable {
         String pkg_name = "";
         if (viewHolder != null) {
-            Object ad = viewHolder.getClass()
-                    .getDeclaredField("taskDescription")
-                    .get(viewHolder);
-            pkg_name = (String) ad.getClass()
-                    .getDeclaredField("packageName").get(ad);
+            Field fieldTD = viewHolder.getClass().getDeclaredField("taskDescription");
+            fieldTD.setAccessible(true);
+            Object ad = fieldTD.get(viewHolder);
+            
+            Field fieldPN = ad.getClass()
+                    .getDeclaredField("packageName");
+            fieldPN.setAccessible(true);
+            pkg_name = (String) fieldPN.get(ad);
         }
         return pkg_name;
     }
@@ -532,11 +540,13 @@ public class RecentTaskHook {
     private static Intent getIntentFromViewHolder(Object viewHolder) {
         Object ad;
         try {
-            ad = viewHolder.getClass()
-                    .getDeclaredField("taskDescription")
-                    .get(viewHolder);
-            return (Intent) ad.getClass()
-                    .getDeclaredField("intent").get(ad);
+            Field fieldTD = viewHolder.getClass().getDeclaredField("taskDescription");
+            fieldTD.setAccessible(true);
+            ad = fieldTD.get(viewHolder);
+
+            Field fieldIntent = ad.getClass().getDeclaredField("intent");
+            fieldIntent.setAccessible(true);
+            return (Intent) fieldIntent.get(ad);
         } catch (IllegalAccessException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
