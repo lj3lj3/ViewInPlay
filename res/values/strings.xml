@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- delete these lines in your language file __begin -->
-	<string name="version">1.0.7</string>
+	<string name="version">1.0.8</string>
 	<!-- delete these lines in your language file __end -->
 	<string name="version_string">Version</string>
     <string name="app_name">ViewInPlay</string>
