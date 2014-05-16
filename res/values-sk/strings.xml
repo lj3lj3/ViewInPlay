@@ -26,7 +26,10 @@
     <string name="pref_summary_show_in_notification_off">"Možnosť 'Zobraziť v Obchode' bude zobrazená v kontextovej ponuke oznámenia"</string>
     <string name="pref_title_directly_view_in_play">Otvoriť priamo v Obchode Google Play</string>
     <string name="pref_summary_directly_view_in_play_on">Otvorí priamo v Obchode Google Play, nezobrazí možnosť Dokončiť akciu pomocou aplikácie</string>
-    <string name="pref_summary_directly_view_in_play_off">Zobrazí Dokončiť akciu pomocou aplikácie</string>
+    <string name="pref_summary_directly_view_in_play_off">Zobrazí 'Dokončiť akciu pomocou aplikácie'</string>
+    <string name="pref_title_use_browser">Zobraziť prehliadače v okne 'Dokončiť akciu pomocou aplikácie'</string>
+    <string name="pref_summary_use_browser_on">"Všetky prehliadače budú zobrazené, takže budete môcť zvoliť prehliadač namiesto aplikácie obchodu (prosím, uistite sa, že možnosť 'Otvoriť priamo v Obchode Google Play' nie je zvolená)"</string>
+    <string name="pref_summary_use_browser_off">Prehliadače nebudú zobrazené, iba dostupné obchody</string>
     <string name="pref_title_compatibility">Kompatibilita</string>
     <string name="pref_title_compat_xhalo">XHaloWindow</string>
     <string name="pref_summary_compat_xhalo">XHaloWindow</string>
