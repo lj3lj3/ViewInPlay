@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="version_string">Version</string>
+    <string name="app_name">ViewInPlay</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="xposed_description">Accéder facilement à la page de l\'application du Play Store</string>
+
+    <string name="recents_remove_from_list">Supprimer de la liste</string>
+    <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="recents_open_halo">Ouvrir en mode halo</string>
+    <string name="recents_launch_floating">Mode flottant</string>
+    <string name="notif_app_info">Information sur l\'application</string>
+    <string name="view_in_play">Voir dans le Play Store</string>
+
+    <string name="pref_title_show_in_recent_panel">Afficher dans le panneau des tâches récentes</string>
+    <string name="pref_summary_show_in_recent_panel_on">Le menu "Voir dans le Play Store" s\'affichera sur le menu popup du panneau des tâches récentes</string>
+    <string name="pref_summary_show_in_recent_panel_off">Activer cette option va ajouter un menu "Voir dans le Play Store" sur le menu popup du panneau des tâches récentes</string>
+    <string name="pref_title_show_in_app_info">Afficher à l\'écran d\'information sur l\'application</string>
+    <string name="pref_summary_show_in_app_info_on">Le menu "Voir dans le Play Store" apparaît à l\'écran d\'information sur l\'application</string>
+    <string name="pref_summary_show_in_app_info_off">Activer cette option va ajouter un menu "Voir dans le Play Store" à l\'écran d\'information sur l\'application</string>
+    <string name="pref_title_two_finger_in_recent_panel">Aller au Play Store via un appui à deux doigts</string>
+    <string name="pref_summary_two_finger_in_recent_panel_on">Utiliser un appui à deux doigts sur la vignette dans le panneau des tâches récentes pour aller dans le Play Store</string>
+    <string name="pref_summary_two_finger_in_recent_panel_off">Activer cette option va vous permettre d\'aller dans le Play Store via un appui à deux doigts sur la vignette dans le panneau des tâches récentes</string>
+    <string name="pref_title_show_in_notification">Afficher dans le menu popup de la notification</string>
+    <string name="pref_summary_show_in_notification_on">Le menu "Voir dans le Play Store" apparaît sur le menu popup via un appui long sur la notification</string>
+    <string name="pref_summary_show_in_notification_off">Activer cette option va ajouter un menu "Voir dans le Play Store" sur le menu popup via un appui long sur la notification</string>
+    <string name="pref_title_directly_view_in_play">Aller directement dans le Play Store</string>
+    <string name="pref_summary_directly_view_in_play_on">Afficher directement dans le Play Store sans passer par la fenêtre de sélection</string>
+    <string name="pref_summary_directly_view_in_play_off">Afficher la fenêtre de sélection qui vous permettra de choisir avec quelle application terminer l\'action</string>
+    <string name="pref_title_use_browser">Afficher les navigateurs dans la fenêtre de sélection</string>
+    <string name="pref_summary_use_browser_on">Tous les navigateurs s\'afficheront dans la fenêtre de sélection, ainsi vous pouvez choisir le navigateur au lieu du Play Store (veuillez vérifier que l\'option "Directement dans le Play Store" ne soit pas cochée, il y aura donc une fenêtre de sélection quand vous appuierez sur le menu "Voir dans le Play Store")</string>
+    <string name="pref_summary_use_browser_off">Afficher tous les magasins d\'applis dans la fenêtre de sélection, navigateurs non inclus</string>	
+    <string name="pref_title_compatibility">Compatibilité</string>
+    <string name="pref_title_compat_xhalo">XHaloWindow</string>
+    <string name="pref_summary_compat_xhalo">XHaloWindow</string>
+    <string name="pref_title_compat_floating">Nouveau mode flottant de PA</string>
+    <string name="pref_summary_compat_floating">Forcer l\'ajout du menu mode flottant si la fonction par défaut ne fonctionne pas, inutile de cocher cela dans d\'autres situations.</string>
+    <string name="pref_title_note">Note</string>
+    <!-- this may be edited often -->
+    <string name="pref_summary_note">Veuillez redémarrer votre appareil après configuration ou mise à jour du module</string>
+    <string name="pref_title_xda">Topic XDA</string>
+    <string name="pref_summary_xda">Appuyez pour accéder au Topic XDA du module ViewInPlay</string>
+    <string name="pref_title_about">À propos</string>
+    <string name="pref_title_hide_icon">Masquer l\'icône dans le lanceur</string>
+    <string name="pref_summary_hide_icon_on">L\'icône du module ne peut plus être afficher dans le lanceur à moins de réinstaller l\'application. Retrouvez-moi dans la liste des modules Xposed.</string>
+    <string name="pref_summary_hide_icon_off">Cochez pour masquer l\'icône dans le lanceur</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">Cette case peut être cocher uniquement depuis votre lanceur</string>
+    <string name="pref_tilte_debug_logs">Journaux de débogage</string>
+    <string name="pref_title_extra">Extra</string>
+    
+    <string name="no_play_on_the_phone">Oh~ vous n\'avez pas le Google Play Store??? Si vous êtes sûr de l\'avoir, veuillez me contacter :)</string>
+    <string name="stock_app">Désolé~ c\'est une application stock, impossible de l\'afficher dans le Play Store.</string>
+    <string name="notice_hide_icon">Etes-vous sûr? Une fois masquée, impossible de revenir en arrière à moins de réinstaller l\'application</string>
+    <!-- <string name="cant_open_in_xhalo">"Sorry, can't launch it. make sure you have XHaloWindow, and actived it :)"</string> -->
+</resources>
