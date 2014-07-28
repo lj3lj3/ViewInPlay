@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="version_string">Versie</string>
+    <string name="app_name">ViewinPlay</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="xposed_description">Geef de Google Play pagina van de app gemakkelijk weer</string>
+
+    <string name="recents_remove_from_list">Verwijderen van lijst</string>
+    <string name="recents_app_info">@string/notif_app_info</string>
+    <string name="recents_open_halo">Open in halo</string>
+    <string name="recents_launch_floating">Zwevend venster</string>
+    <string name="notif_app_info">App informatie</string>
+    <string name="view_in_play">In Google Play weergeven</string>
+
+    <string name="pref_title_show_in_recent_panel">"Weergeven in 'recente apps'"</string>
+    <string name="pref_summary_show_in_recent_panel_on">"Het 'In Google Play weergeven' menu wordt weergegeven in taakbeheer als je lang drukt op een recente app"</string>
+    <string name="pref_summary_show_in_recent_panel_off">"Als je deze optie inschakelt wordt het 'In Google Play weergeven' menu weergegeven bij apps in taakbeheer"</string>
+    <string name="pref_title_show_in_app_info">Geef weer in App info</string>
+    <string name="pref_summary_show_in_app_info_on">"De 'In Google Play weergeven' knop wordt weergegeven in het app info scherm"</string>
+    <string name="pref_summary_show_in_app_info_off">"Als je deze optie inschakelt wordt er een 'In Google Play weergeven' knop toegevoegd aan het venster 'App Info'"</string>
+    <string name="pref_title_two_finger_in_recent_panel">Twee-vinger gebaar</string>
+    <string name="pref_summary_two_finger_in_recent_panel_on">"Tik met 2 vingers op een recente app-miniatuur in 'Recente Apps' om de Google Play pagina te openen"</string>
+    <string name="pref_summary_two_finger_in_recent_panel_off">"Als je deze optie inschakelt kan je door met 2 vingers op een recente app-miniatuur te tikken de Google Play pagina openen"</string>
+    <string name="pref_title_show_in_notification">"Weergeven in notificatie 'long-press' popup menu"</string>
+    <string name="pref_summary_show_in_notification_on">"Het 'In Google Play weergeven' menu wordt weergegeven als je een notificatie item lang ingedrukt houd"</string>
+    <string name="pref_summary_show_in_notification_off">"Als je deze optie inschakelt wordt er een 'In Google Play weergeven' optie weergeven in het popup menu van het notificatie venster"</string>
+    <string name="pref_title_directly_view_in_play">Direct weergeven in Google Play</string>
+    <string name="pref_summary_directly_view_in_play_on">Direct weergeven in Google Play zonder tussenkomst van de app-kiezer</string>
+    <string name="pref_summary_directly_view_in_play_off">De app-kiezer wordt weergeven om zelf te kunnen kiezen met welke app je de app-pagina wil bekijken</string>
+    <string name="pref_title_use_browser">Geef webbrowsers weer in de app-kiezer</string>
+    <string name="pref_summary_use_browser_on">"Alle browsers worden weergeven, zodat je de browser kan kiezen i.p.v. de Google Play app (voor deze optie is het belangrijk dat je de optie 'Direct weergeven in Google Play' uitgeschakeld hebt)"</string>
+    <string name="pref_summary_use_browser_off">Geef alle stores weer, maar verberg de browsers</string>
+    <string name="pref_title_compatibility">compatibiliteits-opties</string>
+    <string name="pref_title_compat_xhalo">XHaloWindow</string>
+    <string name="pref_summary_compat_xhalo">XHaloWindow</string>
+    <string name="pref_title_compat_floating">Nieuwe PA zwevend venster modus</string>
+    <string name="pref_summary_compat_floating">Toevoegen van zwevend venster forceren, voor als de standaard optie niet werkt, deze optie is meestal niet nodig.</string>
+    <string name="pref_title_note">Opmerking</string>
+    <!-- this may be edited often -->
+    <string name="pref_summary_note">Herstart je telefoon na een verandering of een upgrade</string>
+    <string name="pref_title_xda">XDA discussie</string>
+    <string name="pref_summary_xda">Klik hier om de XDA discussie van de ViewInPlay module weer te geven</string>
+    <string name="pref_title_about">Over</string>
+    <string name="pref_title_hide_icon">Verberg icoon in de launcher</string>
+    <string name="pref_summary_hide_icon_on">"Het launcher icoon is verborgen, om deze weer zichtbaar te maken moet je 'ViewInPlay' opnieuw installeren doormiddel van XPosed Installer"</string>
+    <string name="pref_summary_hide_icon_off">Vink aan om het icoon te verbergen</string>
+    <string name="pref_summary_hide_icon_not_from_launcher">Alleen in launcher weergeven</string>
+    <string name="pref_tilte_debug_logs">Fout opsporing</string>
+    <string name="pref_title_extra">Extra</string>
+    
+    <string name="no_play_on_the_phone">Geen Google Play gevonden! Neem contact met me op als je zeker weet dat je Google Play hebt :)</string>
+    <string name="stock_app">"Sorry, dit is een voorgeïnstalleerde app die geen Google Play pagina heeft."</string>
+    <string name="notice_hide_icon">"Weet je zeker dat je het icoon wil verbergen? Als je het icoon verbergt kan je het alleen terugkrijgen als je de app herinstalleert"</string>
+    <!-- <string name="cant_open_in_xhalo">"Sorry, can't launch it. make sure you have XHaloWindow, and actived it :)"</string> -->
+</resources>
